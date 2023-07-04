@@ -1,0 +1,11 @@
+{
+  "item.testfabric.strawberry": "Strawberry",
+  "item.testfabric.horn": "Horn",
+  "item.testfabric.redstone_transform_engine": "RedStone Transform Engine",
+  "block.testfabric.redstone_transform_engine": "RedStone Transform Engine",
+  "block.testfabric.mining_machine": "Mining Machine",
+  "block.testfabric.vertical_half_brick": "Vertical Half Brick",
+  "item_group.testfabric.mod_item_tab": "Test Fabric",
+  "block.testfabric.transport_pipe": "Basic Transport Pipe",
+  "block.testfabric.display_block": "Display Block"
+}

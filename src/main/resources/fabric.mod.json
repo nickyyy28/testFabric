@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "id": "testfabric",
+  "version": "${version}",
+  "name": "TestFabric",
+  "description": "",
+  "authors": [],
+  "contact": {
+    "repo": "https://github.com/nickyyy/TestFabric"
+  },
+  "license": "MIT",
+  "icon": "assets/TestFabric/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "client": [
+      "com.nickyyy.testfabric.client.TestFabricClient"
+    ],
+    "main": [
+      "com.nickyyy.testfabric.TestFabric"
+    ]
+  },
+  "mixins": [
+    "TestFabric.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric": "*",
+    "minecraft": "${minecraft_version}"
+  }
+}

@@ -1,0 +1,5 @@
+{
+  "variants": {
+    "": { "model": "testfabric:block/redstone_transform_engine" }
+  }
+}

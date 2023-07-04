@@ -1,0 +1,95 @@
+{
+  "variants": {
+    "pipe_shape=0": {
+      "model": "testfabric:block/transport_pipe"
+    },
+    "pipe_shape=1": {
+      "model": "testfabric:block/transport_pipe_halfconn"
+    },
+    "pipe_shape=2": {
+      "model": "testfabric:block/transport_pipe_halfconn",
+      "y": 90
+    },
+    "pipe_shape=3": {
+      "model": "testfabric:block/transport_pipe_halfconn",
+      "y": 180
+    },
+    "pipe_shape=4": {
+      "model": "testfabric:block/transport_pipe_halfconn",
+      "y": 270
+    },
+    "pipe_shape=5": {
+      "model": "testfabric:block/transport_pipe_halfconn",
+      "x": 270
+    },
+    "pipe_shape=6": {
+      "model": "testfabric:block/transport_pipe_halfconn",
+      "x": 90
+    },
+    "pipe_shape=7": {
+      "model": "testfabric:block/transport_pipe_fullconn"
+    },
+    "pipe_shape=8": {
+      "model": "testfabric:block/transport_pipe_fullconn",
+      "y": 90
+    },
+    "pipe_shape=9": {
+      "model": "testfabric:block/transport_pipe_fullconn",
+      "x": 90
+    },
+    "pipe_shape=10": {
+      "model": "testfabric:block/transport_pipe_corner"
+    },
+    "pipe_shape=11": {
+      "model": "testfabric:block/transport_pipe_corner",
+      "x": 180,
+      "y": 180
+    },
+    "pipe_shape=12": {
+      "model": "testfabric:block/transport_pipe_corner",
+      "x": 270,
+      "y": 90
+    },
+    "pipe_shape=13": {
+      "model": "testfabric:block/transport_pipe_corner",
+      "x": 90,
+      "y": 90
+    },
+    "pipe_shape=14": {
+      "model": "testfabric:block/transport_pipe_corner",
+      "x": 180
+    },
+    "pipe_shape=15": {
+      "model": "testfabric:block/transport_pipe_corner",
+      "y": 180
+    },
+    "pipe_shape=16": {
+      "model": "testfabric:block/transport_pipe_corner",
+      "x": 270,
+      "y": 270
+    },
+    "pipe_shape=17": {
+      "model": "testfabric:block/transport_pipe_corner",
+      "x": 90,
+      "y": 270
+    },
+    "pipe_shape=18": {
+      "model": "testfabric:block/transport_pipe_corner",
+      "x": 270
+    },
+    "pipe_shape=19": {
+      "model": "testfabric:block/transport_pipe_corner",
+      "x": 270,
+      "y": 180
+    },
+    "pipe_shape=20": {
+      "model": "testfabric:block/transport_pipe_corner",
+      "x": 90
+    },
+    "pipe_shape=21": {
+      "model": "testfabric:block/transport_pipe_corner",
+      "x": 90,
+      "y": 180
+    }
+  }
+}

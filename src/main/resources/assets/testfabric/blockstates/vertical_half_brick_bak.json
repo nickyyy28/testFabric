@@ -1,0 +1,23 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "testfabric:block/vertical_half_brick",
+      "uvlock": true
+    },
+    "facing=east": {
+      "model": "testfabric:block/vertical_half_brick",
+      "y": 90,
+      "uvlock": true
+    },
+    "facing=south": {
+      "model": "testfabric:block/vertical_half_brick",
+      "y": 180,
+      "uvlock": true
+    },
+    "facing=west": {
+      "model": "testfabric:block/vertical_half_brick",
+      "y": 270,
+      "uvlock": true
+    }
+  }
+}

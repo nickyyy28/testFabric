@@ -1,0 +1,6 @@
+{
+  "variants": {
+    "fulled=false": { "model": "testfabric:block/mining_machine" },
+    "fulled=true": { "model": "testfabric:block/mining_machine_fulled" }
+  }
+}

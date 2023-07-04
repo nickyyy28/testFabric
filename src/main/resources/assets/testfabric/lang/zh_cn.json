@@ -1,0 +1,11 @@
+{
+  "item.testfabric.strawberry": "草莓",
+  "item.testfabric.horn": "喇叭",
+  "item.testfabric.redstone_transform_engine": "红石转化引擎",
+  "block.testfabric.redstone_transform_engine": "红石转化引擎",
+  "item_group.testfabric.mod_item_tab": "测试fabric",
+  "block.testfabric.vertical_half_brick": "竖半砖",
+  "block.testfabric.mining_machine": "采矿机",
+  "block.testfabric.transport_pipe": "基础运输管道",
+  "block.testfabric.display_block": "展示方块"
+}

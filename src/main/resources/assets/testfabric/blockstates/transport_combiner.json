@@ -1,0 +1,33 @@
+{
+  "variants": {
+    "facing=0": {
+      "model": "testfabric:block/transport_combiner",
+      "uvlock": false
+    },
+    "facing=1": {
+      "model": "testfabric:block/transport_combiner",
+      "y": 90,
+      "uvlock": false
+    },
+    "facing=2": {
+      "model": "testfabric:block/transport_combiner",
+      "y": 180,
+      "uvlock": false
+    },
+    "facing=3": {
+      "model": "testfabric:block/transport_combiner",
+      "y": 270,
+      "uvlock": false
+    },
+    "facing=4": {
+      "model": "testfabric:block/transport_combiner",
+      "x": 270,
+      "uvlock": false
+    },
+    "facing=5": {
+      "model": "testfabric:block/transport_combiner",
+      "x": 90,
+      "uvlock": false
+    }
+  }
+}

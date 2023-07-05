@@ -42,7 +42,7 @@ public class DisplayBlockEntity extends BlockEntity implements BlockEntityInvent
     }
 
     public ItemStack display() {
-        return itemToDisplay = getStack(0);
+        return getStack(0).isEmpty() ? ItemStack.EMPTY : getStack(0);
     }
 
     @Nullable
@@ -57,6 +57,6 @@ public class DisplayBlockEntity extends BlockEntity implements BlockEntityInvent
     }
 
     public static void tick(World world, BlockPos pos, BlockState state, DisplayBlockEntity entity) {
-
+        entity.itemToDisplay = entity.getStack(0).isEmpty() ? ItemStack.EMPTY : entity.getStack(0);
     }
 }

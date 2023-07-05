@@ -7,5 +7,6 @@
   "block.testfabric.vertical_half_brick": "竖半砖",
   "block.testfabric.mining_machine": "采矿机",
   "block.testfabric.transport_pipe": "基础运输管道",
-  "block.testfabric.display_block": "展示方块"
+  "block.testfabric.display_block": "展示方块",
+  "block.testfabric.transport_combiner": "运输合流器"
 }

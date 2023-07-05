@@ -12,5 +12,6 @@ public class ModItems {
     public static final Item MINING_MACHINE = new BlockItem(ModBlocks.MINING_MACHINE_BLOCK, new FabricItemSettings().maxCount(64));
     public static final Item VERTICAL_HALF_BRICK = new BlockItem(ModBlocks.VERTICAL_HALF_BRICK_BLOCK, new FabricItemSettings().maxCount(64));
     public static final Item TRANSPORT_PIPE = new BlockItem(ModBlocks.TRANSPORT_PIPE_BLOCK, new FabricItemSettings().maxCount(64));
+    public static final Item TRANSPORT_COMBINER = new BlockItem(ModBlocks.TRANSPORT_COMBINER_BLOCK, new FabricItemSettings().maxCount(64));
     public static final Item DISPLAY_BLOCK = new BlockItem(ModBlocks.DISPLAY_BLOCK, new FabricItemSettings().maxCount(64));
 }

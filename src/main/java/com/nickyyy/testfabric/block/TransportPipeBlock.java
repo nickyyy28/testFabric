@@ -1,10 +1,12 @@
 package com.nickyyy.testfabric.block;
 
+import com.nickyyy.testfabric.entity.ModEntities;
+import com.nickyyy.testfabric.entity.TransportPipeEntity;
 import com.nickyyy.testfabric.util.ModLog;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.ShapeContext;
+import net.minecraft.block.*;
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.BlockEntityTicker;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.pathing.NavigationType;
@@ -29,8 +31,9 @@ import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
-public class TransportPipeBlock extends Block {
+public class TransportPipeBlock extends BlockWithEntity {
 
     public static final VoxelShape BASIC_SHAPE = VoxelShapes.cuboid(0.25f, 0.25f, 0.25f, 0.75f, 0.75f, 0.75f);
 
@@ -159,8 +162,6 @@ public class TransportPipeBlock extends Block {
     }
 
 
-    static int ii = 0;
-
     @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
         if (!world.isClient()) {
@@ -203,6 +204,16 @@ public class TransportPipeBlock extends Block {
             ModLog.LOGGER.info("Block Have " + directions.size() + " around blocks");
             return 0;
         }
+    }
+
+    @Override
+    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+        TransportPipeEntity blockEntity = (TransportPipeEntity) world.getBlockEntity(pos);
+        player.sendMessage(Text.of("实体是否找到传送源: " + (blockEntity.findTransferDirection ? "找到了" : "没找到 " + "from: "
+                + (blockEntity.from == null ? "null " : blockEntity.from.toString()) + "to: "
+                + (blockEntity.to == null ? "null" : blockEntity.to.toString()))));
+
+        return ActionResult.SUCCESS;
     }
 
     public int getModel(WorldAccess world, BlockPos pos) {
@@ -281,17 +292,17 @@ public class TransportPipeBlock extends Block {
         ArrayList<Direction> directions = new ArrayList<>();
 
         Block north_block = world.getBlockState(pos.north()).getBlock();
-        if (north_block == block) directions.add(Direction.NORTH);
+        if (north_block == block || ModBlocks.TRANSPORT_COMBINER_BLOCK == north_block) directions.add(Direction.NORTH);
         Block west_block = world.getBlockState(pos.west()).getBlock();
-        if (west_block == block) directions.add(Direction.WEST);
+        if (west_block == block || ModBlocks.TRANSPORT_COMBINER_BLOCK == west_block) directions.add(Direction.WEST);
         Block south_block = world.getBlockState(pos.south()).getBlock();
-        if (south_block == block) directions.add(Direction.SOUTH);
+        if (south_block == block || ModBlocks.TRANSPORT_COMBINER_BLOCK == south_block) directions.add(Direction.SOUTH);
         Block east_block = world.getBlockState(pos.east()).getBlock();
-        if (east_block == block) directions.add(Direction.EAST);
+        if (east_block == block || ModBlocks.TRANSPORT_COMBINER_BLOCK == east_block) directions.add(Direction.EAST);
         Block up_block = world.getBlockState(pos.up()).getBlock();
-        if (up_block == block) directions.add(Direction.UP);
+        if (up_block == block || ModBlocks.TRANSPORT_COMBINER_BLOCK == up_block) directions.add(Direction.UP);
         Block down_block = world.getBlockState(pos.down()).getBlock();
-        if (down_block == block) directions.add(Direction.DOWN);
+        if (down_block == block || ModBlocks.TRANSPORT_COMBINER_BLOCK == down_block) directions.add(Direction.DOWN);
 
         return directions;
     }
@@ -300,22 +311,39 @@ public class TransportPipeBlock extends Block {
         ArrayList<Direction> directions = new ArrayList<>();
 
         Block north_block = world.getBlockState(pos.north()).getBlock();
-        if (north_block == block) directions.add(Direction.NORTH);
+        if (north_block == block || ModBlocks.TRANSPORT_COMBINER_BLOCK == north_block) directions.add(Direction.NORTH);
         Block west_block = world.getBlockState(pos.west()).getBlock();
-        if (west_block == block) directions.add(Direction.WEST);
+        if (west_block == block || ModBlocks.TRANSPORT_COMBINER_BLOCK == west_block) directions.add(Direction.WEST);
         Block south_block = world.getBlockState(pos.south()).getBlock();
-        if (south_block == block) directions.add(Direction.SOUTH);
+        if (south_block == block || ModBlocks.TRANSPORT_COMBINER_BLOCK == south_block) directions.add(Direction.SOUTH);
         Block east_block = world.getBlockState(pos.east()).getBlock();
-        if (east_block == block) directions.add(Direction.EAST);
+        if (east_block == block || ModBlocks.TRANSPORT_COMBINER_BLOCK == east_block) directions.add(Direction.EAST);
         Block up_block = world.getBlockState(pos.up()).getBlock();
-        if (up_block == block) directions.add(Direction.UP);
+        if (up_block == block || ModBlocks.TRANSPORT_COMBINER_BLOCK == up_block) directions.add(Direction.UP);
         Block down_block = world.getBlockState(pos.down()).getBlock();
-        if (down_block == block) directions.add(Direction.DOWN);
+        if (down_block == block || ModBlocks.TRANSPORT_COMBINER_BLOCK == down_block) directions.add(Direction.DOWN);
 
         return directions;
     }
 
     public static boolean isOpposite(Direction direction1, Direction direction2) {
         return direction1.getOpposite() == direction2;
+    }
+
+    @Nullable
+    @Override
+    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+        return new TransportPipeEntity(pos, state);
+    }
+
+    @Override
+    public BlockRenderType getRenderType(BlockState state) {
+        return BlockRenderType.MODEL;
+    }
+
+    @Nullable
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
+        return checkType(type, ModEntities.TRANSPORT_PIPE_ENTITY, TransportPipeEntity::tick);
     }
 }

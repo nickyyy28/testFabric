@@ -7,5 +7,6 @@
   "block.testfabric.vertical_half_brick": "Vertical Half Brick",
   "item_group.testfabric.mod_item_tab": "Test Fabric",
   "block.testfabric.transport_pipe": "Basic Transport Pipe",
-  "block.testfabric.display_block": "Display Block"
+  "block.testfabric.display_block": "Display Block",
+  "block.testfabric.transport_combiner": "Transport Combiner"
 }

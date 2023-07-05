@@ -3,6 +3,7 @@ package com.nickyyy.testfabric.block;
 import com.nickyyy.testfabric.entity.DisplayBlockEntity;
 import com.nickyyy.testfabric.entity.ModEntities;
 import com.nickyyy.testfabric.util.ModLog;
+import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
@@ -31,28 +32,27 @@ public class DisplayBlock extends BlockWithEntity implements BlockEntityProvider
         return new DisplayBlockEntity(pos, state);
     }
 
+
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        if (!world.isClient()) {
-            Inventory inventory = (Inventory) world.getBlockEntity(pos);
+        DisplayBlockEntity entity = (DisplayBlockEntity) world.getBlockEntity(pos);
 
-            if (inventory == null) return ActionResult.FAIL;
+        if (entity == null) return ActionResult.FAIL;
 
-            if (!player.getStackInHand(hand).isEmpty()) {
-                if (inventory.getStack(0).isEmpty()) {
-                    ItemStack itemStack = player.getStackInHand(hand).copy();
-                    itemStack.setCount(1);
-                    inventory.setStack(0, itemStack);
-                    player.getStackInHand(hand).setCount(player.getStackInHand(hand).getCount() - 1);
-                } else {
-                    ModLog.LOGGER.warn("The first slot holds "
-                            + inventory.getStack(0));
-                }
+        if (!player.getStackInHand(hand).isEmpty()) {
+            if (entity.getStack(0).isEmpty()) {
+                ItemStack itemStack = player.getStackInHand(hand).copy();
+                itemStack.setCount(1);
+                entity.setStack(0, itemStack);
+                player.getStackInHand(hand).setCount(player.getStackInHand(hand).getCount() - 1);
             } else {
-                if (!inventory.getStack(0).isEmpty()) {
-                    player.getInventory().offerOrDrop(inventory.getStack(0));
-                    inventory.removeStack(0);
-                }
+                ModLog.LOGGER.warn("The first slot holds "
+                        + entity.getStack(0));
+            }
+        } else {
+            if (!entity.getStack(0).isEmpty()) {
+                player.getInventory().offerOrDrop(entity.getStack(0));
+                entity.removeStack(0);
             }
         }
         return ActionResult.SUCCESS;

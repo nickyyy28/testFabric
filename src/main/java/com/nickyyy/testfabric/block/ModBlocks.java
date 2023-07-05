@@ -20,4 +20,5 @@ public class ModBlocks {
     public static final VerticalHalfBrickBlock VERTICAL_HALF_BRICK_BLOCK = new VerticalHalfBrickBlock(FabricBlockSettings.create().hardness(3.0f));
     public static final TransportPipeBlock TRANSPORT_PIPE_BLOCK = new TransportPipeBlock(FabricBlockSettings.create().hardness(4.0f));
     public static final DisplayBlock DISPLAY_BLOCK = new DisplayBlock(FabricBlockSettings.create().hardness(4.0f));
+    public static final TransportCombinerBlock TRANSPORT_COMBINER_BLOCK = new TransportCombinerBlock(FabricBlockSettings.create().hardness(4.0f));
 }

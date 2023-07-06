@@ -4,10 +4,10 @@ import com.nickyyy.testfabric.block.TransportCombinerBlock;
 import com.nickyyy.testfabric.block.TransportPipeBlock;
 import com.nickyyy.testfabric.util.ModLog;
 import com.nickyyy.testfabric.util.Pair;
-import net.minecraft.block.Block;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.block.HopperBlock;
 import net.minecraft.block.entity.LootableContainerBlockEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventories;
@@ -26,6 +26,8 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.stream.IntStream;
+
 public class TransportPipeEntity extends LootableContainerBlockEntity implements BlockEntityInventory, SidedInventory {
     private DefaultedList<ItemStack> items = DefaultedList.ofSize(1, ItemStack.EMPTY);
     public ItemStack itemToDisplay = ItemStack.EMPTY;
@@ -33,6 +35,8 @@ public class TransportPipeEntity extends LootableContainerBlockEntity implements
     public Direction from = null;
     public Direction to = null;
     public boolean findTransferDirection = false;
+    private int cooling = -1;
+    private long lastTickTime;
 
     public TransportPipeEntity(BlockPos pos, BlockState state) {
         super(ModEntities.TRANSPORT_PIPE_ENTITY, pos, state);
@@ -77,7 +81,146 @@ public class TransportPipeEntity extends LootableContainerBlockEntity implements
     }
 
     public static void tick(World world, BlockPos pos, BlockState state, TransportPipeEntity entity) {
+        entity.cooling --;
         entity.updateState(world, pos, state);
+        if (CanTransfer(world, pos, state) && entity.needsCooling()) {
+            entity.setTransferCooling(0);
+            insertAndExtract(world, pos, state, entity);
+        }
+    }
+
+    private boolean needsCooling() {
+        return this.cooling > 0;
+    }
+
+    @Environment(EnvType.SERVER)
+    private static boolean insertAndExtract(World world, BlockPos pos, BlockState state, TransportPipeEntity entity) {
+        boolean ret = false;
+
+        if (!entity.isEmpty()) {
+            ret = insert(world, pos, state, entity);
+        }
+
+        return ret;
+    }
+
+    private static boolean insert(World world, BlockPos pos, BlockState state, Inventory inventory) {
+        Inventory inventory2 = getOutputInventory(world, pos, state);
+        if (inventory2 == null) {
+            return false;
+        }
+        Direction direction = state.get(HopperBlock.FACING).getOpposite();
+        if (isInventoryFull(inventory2, direction)) {
+            return false;
+        }
+        for (int i = 0; i < inventory.size(); ++i) {
+            if (inventory.getStack(i).isEmpty()) continue;
+            ItemStack itemStack = inventory.getStack(i).copy();
+            ItemStack itemStack2 = transfer(inventory, inventory2, inventory.removeStack(i, 1), direction);
+            if (itemStack2.isEmpty()) {
+                inventory2.markDirty();
+                return true;
+            }
+            inventory.setStack(i, itemStack);
+        }
+        return false;
+    }
+
+    private static IntStream getAvailableSlots(Inventory inventory, Direction side) {
+        if (inventory instanceof SidedInventory) {
+            return IntStream.of(((SidedInventory)inventory).getAvailableSlots(side));
+        }
+        return IntStream.range(0, inventory.size());
+    }
+
+    private static boolean isInventoryFull(Inventory inventory, Direction direction) {
+        return getAvailableSlots(inventory, direction).allMatch(slot -> {
+            ItemStack itemStack = inventory.getStack(slot);
+            return itemStack.getCount() >= itemStack.getMaxCount();
+        });
+    }
+
+    private static boolean isInventoryEmpty(Inventory inv, Direction facing) {
+        return getAvailableSlots(inv, facing).allMatch(slot -> inv.getStack(slot).isEmpty());
+    }
+
+    public static ItemStack transfer(@Nullable Inventory from, Inventory to, ItemStack stack, @Nullable Direction side) {
+        if (to instanceof SidedInventory) {
+            SidedInventory sidedInventory = (SidedInventory)to;
+            if (side != null) {
+                int[] is = sidedInventory.getAvailableSlots(side);
+                int i = 0;
+                while (i < is.length) {
+                    if (stack.isEmpty()) return stack;
+                    stack = transfer(from, to, stack, is[i], side);
+                    ++i;
+                }
+                return stack;
+            }
+        }
+        int j = to.size();
+        int i = 0;
+        while (i < j) {
+            if (stack.isEmpty()) return stack;
+            stack = transfer(from, to, stack, i, side);
+            ++i;
+        }
+        return stack;
+    }
+
+    private static boolean canInsert(Inventory inventory, ItemStack stack, int slot, @Nullable Direction side) {
+        SidedInventory sidedInventory;
+        if (!inventory.isValid(slot, stack)) {
+            return false;
+        }
+        return !(inventory instanceof SidedInventory) || (sidedInventory = (SidedInventory)inventory).canInsert(slot, stack, side);
+    }
+
+    private static boolean canMergeItems(ItemStack first, ItemStack second) {
+        return first.getCount() <= first.getMaxCount() && ItemStack.canCombine(first, second);
+    }
+
+    private static ItemStack transfer(@Nullable Inventory from, Inventory to, ItemStack stack, int slot, @Nullable Direction side) {
+        ItemStack itemStack = to.getStack(slot);
+        if (canInsert(to, stack, slot, side)) {
+            int j;
+            boolean bl = false;
+            boolean bl2 = to.isEmpty();
+            if (itemStack.isEmpty()) {
+                to.setStack(slot, stack);
+                stack = ItemStack.EMPTY;
+                bl = true;
+            } else if (canMergeItems(itemStack, stack)) {
+                int i = stack.getMaxCount() - itemStack.getCount();
+                j = Math.min(stack.getCount(), i);
+                stack.decrement(j);
+                itemStack.increment(j);
+                boolean bl3 = bl = j > 0;
+            }
+            if (bl) {
+                TransportPipeEntity entity;
+                if (bl2 && to instanceof TransportPipeEntity && !(entity = (TransportPipeEntity)to).isDisabled()) {
+                    j = 0;
+                    if (from instanceof TransportPipeEntity) {
+                        TransportPipeEntity entity1 = (TransportPipeEntity)from;
+                        if (entity.lastTickTime >= entity1.lastTickTime) {
+                            j = 1;
+                        }
+                    }
+                    entity.setTransferCooling(8 - j);
+                }
+                to.markDirty();
+            }
+        }
+        return stack;
+    }
+
+    private void setTransferCooling(int cooling) {
+        this.cooling = cooling;
+    }
+
+    public boolean isDisabled() {
+        return this.cooling > 8;
     }
 
     @Override
@@ -127,21 +270,24 @@ public class TransportPipeEntity extends LootableContainerBlockEntity implements
 
     @Override
     public boolean canInsert(int slot, ItemStack stack, @Nullable Direction dir) {
-        return false;
+        return dir == from;
     }
 
     @Override
     public boolean canExtract(int slot, ItemStack stack, Direction dir) {
-        return false;
+        return dir == to;
     }
 
     private static Inventory getOutputInventory(World world, BlockPos pos, BlockState state) {
-
-        return null;
+        return getInventoryByDirection(world, pos, ((TransportPipeEntity)world.getBlockEntity(pos)).to);
     }
 
     private static Inventory getInputInventory(World world, BlockPos pos, BlockState state) {
-        return null;
+        return getInventoryByDirection(world, pos, ((TransportPipeEntity)world.getBlockEntity(pos)).from);
+    }
+
+    private static Inventory getInventoryByDirection(World world, BlockPos pos, Direction direction) {
+        return (Inventory) world.getBlockEntity(posMove(pos, direction));
     }
 
     public static boolean CanTransfer(World world, BlockPos pos, BlockState state) {
@@ -156,61 +302,69 @@ public class TransportPipeEntity extends LootableContainerBlockEntity implements
     }
 
     private void updateState(World world, BlockPos pos, BlockState state) {
-        Integer shape = state.get(TransportPipeBlock.PIPE_SHAPE);
-        if (shape < 7) {
+        if (!world.isClient()) {
+            Integer shape = state.get(TransportPipeBlock.PIPE_SHAPE);
+            if (shape < 7) {
+                findTransferDirection = false;
+                from = null;
+                to = null;
+//                ModLog.LOGGER.info("SHAPE < 7");
+                return;
+            }
+
+            Pair<Direction> pair = getDirectionPair(shape);
+            BlockPos newPos = posMove(pos, pair.var1);
+//            ModLog.LOGGER.info("方块位置:" + pos.toShortString());
+//            ModLog.LOGGER.info("搜索方块位置:" + newPos.toShortString() + " 方向: " + pair.var1.toString());
+            if (world.getBlockEntity(newPos) instanceof TransportPipeEntity) {
+//                ModLog.LOGGER.info("找到管道");
+                TransportPipeEntity entity = ((TransportPipeEntity) world.getBlockEntity(newPos));
+                if (entity.findTransferDirection && entity.to.getOpposite() == pair.var1) {
+                    findTransferDirection = true;
+                    from = pair.var1;
+                    to = pair.var2;
+                    return;
+                }
+//                ModLog.LOGGER.info("该管道无法传输");
+            } else if (world.getBlockEntity(newPos) instanceof TransportCombinerBlockEntity) {
+//                ModLog.LOGGER.info("找到合流器");
+                TransportCombinerBlockEntity entity = (TransportCombinerBlockEntity) world.getBlockEntity(newPos);
+                BlockState state1 = world.getBlockState(newPos);
+                if (TransportCombinerBlock.getDirectionByState(state1.get(TransportCombinerBlock.FACING)) == pair.var1) {
+                    findTransferDirection = true;
+                    from = pair.var1;
+                    to = pair.var2;
+                    return;
+                }
+//                ModLog.LOGGER.info("合流器方向错误");
+            }
+            newPos = posMove(pos, pair.var2);
+//            ModLog.LOGGER.info("搜索方块位置:" + newPos.toShortString() + " 方向: " + pair.var2.toString());
+            if (world.getBlockEntity(newPos) instanceof TransportPipeEntity) {
+                TransportPipeEntity entity = ((TransportPipeEntity) world.getBlockEntity(newPos));
+                if (entity.findTransferDirection && entity.to.getOpposite() == pair.var2) {
+                    findTransferDirection = true;
+                    from = pair.var2;
+                    to = pair.var1;
+                    return;
+                }
+//                ModLog.LOGGER.info("方向2未找到上一个管道");
+            } else if (world.getBlockEntity(newPos) instanceof TransportCombinerBlockEntity) {
+                TransportCombinerBlockEntity entity = (TransportCombinerBlockEntity) world.getBlockEntity(newPos);
+                BlockState state1 = world.getBlockState(newPos);
+                if (TransportCombinerBlock.getDirectionByState(state1.get(TransportCombinerBlock.FACING)) == pair.var2) {
+                    findTransferDirection = true;
+                    from = pair.var2;
+                    to = pair.var1;
+                    return;
+                }
+//                ModLog.LOGGER.info("方向2未找到合流器");
+            }
+
             findTransferDirection = false;
             from = null;
             to = null;
-            ModLog.LOGGER.info("SHAPE < 7");
-            return;
         }
-        Pair<Direction> pair = getDirectionPair(shape);
-        BlockPos newPos = posMove(pos, pair.var1);
-        if (world.getBlockEntity(newPos) instanceof TransportPipeEntity) {
-            TransportPipeEntity entity = ((TransportPipeEntity) world.getBlockEntity(newPos));
-            if (entity.findTransferDirection && entity.to.getOpposite() == pair.var1) {
-                findTransferDirection = true;
-                from = pair.var1;
-                to = pair.var2;
-                return;
-            }
-            ModLog.LOGGER.info("方向1未找到上一个管道");
-        } else if (world.getBlockEntity(newPos) instanceof TransportCombinerBlockEntity) {
-            TransportCombinerBlockEntity entity = (TransportCombinerBlockEntity) world.getBlockEntity(newPos);
-            BlockState state1 = world.getBlockState(newPos);
-            if (TransportCombinerBlock.getDirectionByState(state1.get(TransportCombinerBlock.FACING)) == pair.var1) {
-                findTransferDirection = true;
-                from = pair.var1;
-                to = pair.var2;
-                return;
-            }
-            ModLog.LOGGER.info("方向1未找到合流器");
-        }
-        newPos = posMove(pos, pair.var2);
-        if (world.getBlockEntity(newPos) instanceof TransportPipeEntity) {
-            TransportPipeEntity entity = ((TransportPipeEntity) world.getBlockEntity(newPos));
-            if (entity.findTransferDirection && entity.to.getOpposite() == pair.var2) {
-                findTransferDirection = true;
-                from = pair.var2;
-                to = pair.var1;
-                return;
-            }
-            ModLog.LOGGER.info("方向2未找到上一个管道");
-        } else if (world.getBlockEntity(newPos) instanceof TransportCombinerBlockEntity) {
-            TransportCombinerBlockEntity entity = (TransportCombinerBlockEntity) world.getBlockEntity(newPos);
-            BlockState state1 = world.getBlockState(newPos);
-            if (TransportCombinerBlock.getDirectionByState(state1.get(TransportCombinerBlock.FACING)) == pair.var2) {
-                findTransferDirection = true;
-                from = pair.var2;
-                to = pair.var1;
-                return;
-            }
-            ModLog.LOGGER.info("方向2未找到合流器");
-        }
-
-        findTransferDirection = false;
-        from = null;
-        to = null;
     }
 
     private Pair<Direction> getDirectionPair(int shape) {
@@ -236,17 +390,29 @@ public class TransportPipeEntity extends LootableContainerBlockEntity implements
 
     public static BlockPos posMove(BlockPos pos, Direction direction) {
         BlockPos newPos = new BlockPos(pos);
+//        ModLog.LOGGER.warn("变换前: " + newPos.toShortString());
         switch (direction) {
-            case NORTH -> newPos.north();
-            case SOUTH -> newPos.south();
-            case WEST -> newPos.west();
-            case EAST -> newPos.east();
-            case UP -> newPos.up();
-            case DOWN -> newPos.down();
+            case NORTH -> newPos = newPos.north(1);
+            case SOUTH -> newPos = newPos.south(1);
+            case WEST -> newPos = newPos.west(1);
+            case EAST -> newPos = newPos.east(1);
+            case UP -> newPos = newPos.up(1);
+            case DOWN -> newPos = newPos.down(1);
             default -> {
                 int i = 1;
+//                ModLog.LOGGER.error("Always error dir");
             }
         }
+//        ModLog.LOGGER.warn("变换后: " + newPos.toShortString());
         return newPos;
+    }
+
+
+    public boolean isFull() {
+        for (ItemStack itemStack : this.items) {
+            if (!itemStack.isEmpty() && itemStack.getCount() == itemStack.getMaxCount()) continue;
+            return false;
+        }
+        return true;
     }
 }

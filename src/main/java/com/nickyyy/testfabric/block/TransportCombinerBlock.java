@@ -111,7 +111,8 @@ public class TransportCombinerBlock extends BlockWithEntity {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return checkType(type, ModEntities.TRANSPORT_COMBINER_BLOCK_ENTITY, TransportCombinerBlockEntity::tick);
+        if (!world.isClient()) return checkType(type, ModEntities.TRANSPORT_COMBINER_BLOCK_ENTITY, TransportCombinerBlockEntity::tick);
+        return null;
     }
 
     @Override

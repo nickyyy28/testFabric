@@ -45,6 +45,7 @@ public class TransportCombinerBlock extends BlockWithEntity {
             NamedScreenHandlerFactory screenHandlerFactory = state.createScreenHandlerFactory(world, pos);
 
             if (screenHandlerFactory != null) {
+
                 player.openHandledScreen(screenHandlerFactory);
             }
         }

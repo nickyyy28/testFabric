@@ -210,6 +210,9 @@ public class TransportPipeBlock extends BlockWithEntity {
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         if (!world.isClient()) {
             TransportPipeEntity blockEntity = (TransportPipeEntity) world.getBlockEntity(pos);
+
+            if (TransportPipeEntity.debugEntity == blockEntity) TransportPipeEntity.debugEntity = null;
+            else TransportPipeEntity.debugEntity = blockEntity;
             player.sendMessage(Text.of("实体是否找到传送源: " + (blockEntity.findTransferDirection ? "找到了" : "没找到 " + "from: "
                     + (blockEntity.from == null ? "null " : blockEntity.from.toString()) + "to: "
                     + (blockEntity.to == null ? "null" : blockEntity.to.toString()))));
@@ -346,7 +349,7 @@ public class TransportPipeBlock extends BlockWithEntity {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        if (!world.isClient()) return checkType(type, ModEntities.TRANSPORT_PIPE_ENTITY, TransportPipeEntity::tick);
-        return null;
+        if (!world.isClient()) return checkType(type, ModEntities.TRANSPORT_PIPE_ENTITY, TransportPipeEntity::server_tick);
+        return checkType(type, ModEntities.TRANSPORT_PIPE_ENTITY, TransportPipeEntity::client_tick);
     }
 }

@@ -16,6 +16,7 @@ import net.fabricmc.fabric.impl.screenhandler.client.ClientNetworking;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 
 @Environment(EnvType.CLIENT)
 public class TestFabricClient implements ClientModInitializer {
@@ -32,10 +33,15 @@ public class TestFabricClient implements ClientModInitializer {
         ClientPlayNetworking.registerGlobalReceiver(TransportPipeEntity.TRANSPORT_ENTITY_PACKET_ID, ((client, handler, buf, responseSender) -> {
             ItemStack stack = buf.readItemStack();
             BlockPos pos = buf.readBlockPos();
+            Direction from = TransportPipeEntity.PacketReadDirection(buf);
+            Direction to = TransportPipeEntity.PacketReadDirection(buf);
             ModLog.LOGGER.info("client receive msg");
 
             TransportPipeEntity entity = (TransportPipeEntity) handler.getWorld().getBlockEntity(pos);
+            if (entity == null) return;
             entity.setDisplay(stack);
+            entity.from = from;
+            entity.to = to;
         }));
     }
 }

@@ -116,14 +116,78 @@ public class TransportPipeEntity extends LootableContainerBlockEntity implements
     private long lastEmptyTick = 0;
     private ItemStack lastItemToDisplay = ItemStack.EMPTY;
 
+    private boolean emptySend = false;
+
+    private long idleTick = 0;
+
+    public static void PacketWriteDirection(PacketByteBuf buf, Direction direction) {
+        if (null == direction) {
+            buf.writeInt(0);
+            return;
+        }
+        switch (direction) {
+            case NORTH -> buf.writeInt(1);
+            case EAST -> buf.writeInt(2);
+            case SOUTH -> buf.writeInt(3);
+            case WEST -> buf.writeInt(4);
+            case UP -> buf.writeInt(5);
+            case DOWN -> buf.writeInt(6);
+        }
+    }
+
+    public static Direction PacketReadDirection(PacketByteBuf buf) {
+        int read = buf.readInt();
+        return switch (read) {
+            case 2 -> Direction.EAST;
+            case 3 -> Direction.SOUTH;
+            case 4 -> Direction.WEST;
+            case 5 -> Direction.UP;
+            case 6 -> Direction.DOWN;
+            case 1 -> Direction.NORTH;
+            default -> Direction.NORTH;
+        };
+    }
+
     public static void server_tick(World world, BlockPos pos, BlockState state, TransportPipeEntity entity) {
         entity.cooling--;
         entity.updateState(world, pos, state);
         long nowTime = world.getTime();
-        ItemStack nowItemDisplay = entity.items.get(0);
+        ItemStack nowItemDisplay = entity.items.get(0).getCount() == 0 ? ItemStack.EMPTY : entity.items.get(0);
+        entity.idleTick ++;
 
+        if (nowItemDisplay == ItemStack.EMPTY) {
+            if ((nowTime - entity.lastEmptyTick > 30 && !entity.emptySend) || entity.idleTick % (20 * 3) == 0) {
+                for (ServerPlayerEntity player : PlayerLookup.tracking((ServerWorld) world, pos)) {
+                    PacketByteBuf buf = PacketByteBufs.create();
+                    buf.writeItemStack(nowItemDisplay);
+                    buf.writeBlockPos(pos);
+                    PacketWriteDirection(buf, entity.from);
+                    PacketWriteDirection(buf, entity.to);
+                    ServerPlayNetworking.send(player, TRANSPORT_ENTITY_PACKET_ID, buf);
+                }
+                entity.emptySend = true;
+                ModLog.LOGGER.info("Send EMPTY");
+            }
+        } else {
+            entity.emptySend = false;
+            entity.lastEmptyTick = nowTime;
+            if (entity.lastItemToDisplay != nowItemDisplay) {
+                for (ServerPlayerEntity player : PlayerLookup.tracking((ServerWorld) world, pos)) {
+                    PacketByteBuf buf = PacketByteBufs.create();
+                    buf.writeItemStack(nowItemDisplay);
+                    buf.writeBlockPos(pos);
+                    PacketWriteDirection(buf, entity.from);
+                    PacketWriteDirection(buf, entity.to);
+                    ServerPlayNetworking.send(player, TRANSPORT_ENTITY_PACKET_ID, buf);
+                }
+                entity.lastItemToDisplay = nowItemDisplay;
+                ModLog.LOGGER.info("Item Different");
+            } else {
+                ModLog.LOGGER.info("Item Same");
+            }
+        }
 
-        if (nowItemDisplay != ItemStack.EMPTY && entity.lastItemToDisplay != nowItemDisplay) {
+        /*if (nowItemDisplay != ItemStack.EMPTY && entity.lastItemToDisplay != nowItemDisplay) {
             //发送数据包
             for (ServerPlayerEntity player : PlayerLookup.tracking((ServerWorld) world, pos)) {
                 PacketByteBuf buf = PacketByteBufs.create();
@@ -147,7 +211,7 @@ public class TransportPipeEntity extends LootableContainerBlockEntity implements
                 entity.lastEmptyTick = nowTime;
                 if (debugEntity == entity) ModLog.LOGGER.info("sending empty packet");
             }
-        }
+        }*/
 
 //        if (debugEntity == entity) ModLog.LOGGER.info("update status...");
         if (CanTransfer(world, pos, state) && !entity.needsCooling()) {

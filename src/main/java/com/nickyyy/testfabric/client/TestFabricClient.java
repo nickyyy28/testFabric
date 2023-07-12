@@ -35,7 +35,6 @@ public class TestFabricClient implements ClientModInitializer {
             BlockPos pos = buf.readBlockPos();
             Direction from = TransportPipeEntity.PacketReadDirection(buf);
             Direction to = TransportPipeEntity.PacketReadDirection(buf);
-            ModLog.LOGGER.info("client receive msg");
 
             TransportPipeEntity entity = (TransportPipeEntity) handler.getWorld().getBlockEntity(pos);
             if (entity == null) return;

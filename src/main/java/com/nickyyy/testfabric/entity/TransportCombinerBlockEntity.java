@@ -172,6 +172,7 @@ public class TransportCombinerBlockEntity extends BlockEntity implements BlockEn
         return TransportCombinerBlockEntity.getAvailableSlots(inventory, direction).allMatch(slot -> inventory.getStack(slot).isEmpty());
     }
 
+    //TODO need make the combiner can get item from 5 side at the same time
     private static Inventory getInputInventory(World world, TransportCombinerBlockEntity entity) {
         BlockPos pos = entity.getPos();
         Direction outputDir = TransportCombinerBlock.getDirectionByState(entity.state.get(TransportCombinerBlock.FACING)).getOpposite();

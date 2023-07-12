@@ -166,7 +166,6 @@ public class TransportPipeEntity extends LootableContainerBlockEntity implements
                     ServerPlayNetworking.send(player, TRANSPORT_ENTITY_PACKET_ID, buf);
                 }
                 entity.emptySend = true;
-                ModLog.LOGGER.info("Send EMPTY");
             }
         } else {
             entity.emptySend = false;
@@ -181,38 +180,8 @@ public class TransportPipeEntity extends LootableContainerBlockEntity implements
                     ServerPlayNetworking.send(player, TRANSPORT_ENTITY_PACKET_ID, buf);
                 }
                 entity.lastItemToDisplay = nowItemDisplay;
-                ModLog.LOGGER.info("Item Different");
-            } else {
-                ModLog.LOGGER.info("Item Same");
             }
         }
-
-        /*if (nowItemDisplay != ItemStack.EMPTY && entity.lastItemToDisplay != nowItemDisplay) {
-            //发送数据包
-            for (ServerPlayerEntity player : PlayerLookup.tracking((ServerWorld) world, pos)) {
-                PacketByteBuf buf = PacketByteBufs.create();
-                buf.writeItemStack(nowItemDisplay);
-                buf.writeBlockPos(pos);
-                ServerPlayNetworking.send(player, TRANSPORT_ENTITY_PACKET_ID, buf);
-            }
-            if (debugEntity == entity) ModLog.LOGGER.info("sending item packet");
-            entity.lastItemToDisplay = nowItemDisplay;
-        } else {
-            //为空
-            if (nowTime - entity.lastEmptyTick > 20 && entity.lastItemToDisplay != ItemStack.EMPTY) {
-                for (ServerPlayerEntity player : PlayerLookup.tracking((ServerWorld) world, pos)) {
-                    PacketByteBuf buf = PacketByteBufs.create();
-                    buf.writeItemStack(nowItemDisplay);
-                    buf.writeBlockPos(pos);
-                    ServerPlayNetworking.send(player, TRANSPORT_ENTITY_PACKET_ID, buf);
-                    entity.lastEmptyTick = world.getTime();
-                }
-                entity.lastItemToDisplay = ItemStack.EMPTY;
-                entity.lastEmptyTick = nowTime;
-                if (debugEntity == entity) ModLog.LOGGER.info("sending empty packet");
-            }
-        }*/
-
 //        if (debugEntity == entity) ModLog.LOGGER.info("update status...");
         if (CanTransfer(world, pos, state) && !entity.needsCooling()) {
             entity.setCooling(0);

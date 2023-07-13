@@ -43,6 +43,8 @@ public class TransportCombinerBlockEntity extends BlockEntity implements BlockEn
     private int cooling = -1;
     private long lastTickTime;
 
+    private static final int MAX_COOLING = 4;
+
     public static final ArrayList<Direction> inputDirs = Stream.of(Direction.NORTH, Direction.WEST, Direction.SOUTH, Direction.EAST, Direction.UP, Direction.DOWN)
             .collect(Collectors.toCollection(ArrayList::new));
 
@@ -121,19 +123,24 @@ public class TransportCombinerBlockEntity extends BlockEntity implements BlockEn
     }
 
     private static boolean extract(World world, TransportCombinerBlockEntity entity) {
-        Inventory inventory = TransportCombinerBlockEntity.getInputInventory(world, entity);
-        if (inventory != null) {
-            Direction direction = Direction.DOWN;
-            if (TransportCombinerBlockEntity.isInventoryEmpty(inventory, direction)) {
-                return false;
+        boolean ret = false;
+        ArrayList<Inventory> inventories = TransportCombinerBlockEntity.getInputInventory(world, entity);
+        for(Inventory inventory : inventories) {
+            if (inventory != null) {
+                Direction direction = Direction.DOWN;
+                if (TransportCombinerBlockEntity.isInventoryEmpty(inventory, direction)) {
+                    ret = false;
+                    continue;
+                }
+                ret = TransportCombinerBlockEntity.getAvailableSlots(inventory, direction).anyMatch(slot -> TransportCombinerBlockEntity.extract(entity, inventory, slot, direction));
             }
-            return TransportCombinerBlockEntity.getAvailableSlots(inventory, direction).anyMatch(slot -> TransportCombinerBlockEntity.extract(entity, inventory, slot, direction));
         }
+
 //        for (ItemEntity itemEntity : TransportCombinerBlockEntity.getInputItemEntities(world, entity)) {
 //            if (!TransportCombinerBlockEntity.extract(entity, itemEntity)) continue;
 //            return true;
 //        }
-        return false;
+        return ret;
     }
 
     private static boolean extract(Inventory inventory, ItemEntity itemEntity) {
@@ -173,20 +180,23 @@ public class TransportCombinerBlockEntity extends BlockEntity implements BlockEn
     }
 
     //TODO need make the combiner can get item from 5 side at the same time
-    private static Inventory getInputInventory(World world, TransportCombinerBlockEntity entity) {
+    private static ArrayList<Inventory> getInputInventory(World world, TransportCombinerBlockEntity entity) {
         BlockPos pos = entity.getPos();
         Direction outputDir = TransportCombinerBlock.getDirectionByState(entity.state.get(TransportCombinerBlock.FACING)).getOpposite();
+
+        ArrayList<Inventory> inventories = new ArrayList<>();
+
         for (Direction inputDir : inputDirs) {
             if (inputDir == outputDir) continue;
             Inventory inventory = getInventoryAt(world, pos.offset(inputDir));
             if (inventory == null || inventory.isEmpty()) {
                 continue;
             } else {
-                return inventory;
+                inventories.add(inventory);
             }
         }
 
-        return null;
+        return inventories;
     }
 
     private static boolean insertAndExtract(World world, BlockPos pos, BlockState state, TransportCombinerBlockEntity blockEntity, BooleanSupplier booleanSupplier) {
@@ -202,7 +212,7 @@ public class TransportCombinerBlockEntity extends BlockEntity implements BlockEn
                 bl |= booleanSupplier.getAsBoolean();
             }
             if (bl) {
-                blockEntity.setCooling(8);
+                blockEntity.setCooling(MAX_COOLING);
                 TransportCombinerBlockEntity.markDirty(world, pos, state);
                 return true;
             }
@@ -283,7 +293,7 @@ public class TransportCombinerBlockEntity extends BlockEntity implements BlockEn
                             j = 1;
                         }
                     }
-                    hopperBlockEntity.setCooling(8 - j);
+                    hopperBlockEntity.setCooling(MAX_COOLING - j);
                 }
                 to.markDirty();
             }
@@ -292,7 +302,7 @@ public class TransportCombinerBlockEntity extends BlockEntity implements BlockEn
     }
 
     private boolean isDisabled() {
-        return this.cooling > 8;
+        return this.cooling > MAX_COOLING;
     }
 
     private static boolean canMergeItems(ItemStack first, ItemStack second) {

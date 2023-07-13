@@ -156,7 +156,7 @@ public class TransportPipeEntity extends LootableContainerBlockEntity implements
         entity.idleTick ++;
 
         if (nowItemDisplay == ItemStack.EMPTY) {
-            if ((nowTime - entity.lastEmptyTick > 30 && !entity.emptySend) || entity.idleTick % (20 * 3) == 0) {
+            if ((nowTime - entity.lastEmptyTick > 2 && !entity.emptySend) || entity.idleTick % (20 * 3) == 0) {
                 for (ServerPlayerEntity player : PlayerLookup.tracking((ServerWorld) world, pos)) {
                     PacketByteBuf buf = PacketByteBufs.create();
                     buf.writeItemStack(nowItemDisplay);

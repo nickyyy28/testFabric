@@ -1,39 +1,23 @@
 package com.nickyyy.testfabric;
 
-import com.nickyyy.testfabric.block.MiningMachineBlock;
 import com.nickyyy.testfabric.block.ModBlocks;
-import com.nickyyy.testfabric.entity.MiningMachineBlockEntity;
 import com.nickyyy.testfabric.entity.ModEntities;
 import com.nickyyy.testfabric.item.ModItemGroup;
 import com.nickyyy.testfabric.item.ModItems;
-import com.nickyyy.testfabric.render.DisplayBlockEntityRender;
-import com.nickyyy.testfabric.screen.ModScreenHandlers;
-import com.nickyyy.testfabric.screen.TransportCombinerScreen;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
-import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry;
-import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
-import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
-import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.fabricmc.fabric.api.registry.CompostingChanceRegistry;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.block.entity.HopperBlockEntity;
 import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
-import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
-import net.minecraft.entity.Entity;
 import net.minecraft.item.*;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryKeys;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 
-public class TestFabric implements ModInitializer {
+public class ModMain implements ModInitializer {
 
     //    public static final Item FRUIT_STRAWBERRY = new Item(new Item.Settings().food(ModFoodComponents.FRUIT_STRAWBERRY));
 
@@ -51,6 +35,11 @@ public class TestFabric implements ModInitializer {
         Registry.register(Registries.ITEM, new Identifier("testfabric", "transport_combiner"), ModItems.TRANSPORT_COMBINER);
         Registry.register(Registries.ITEM, new Identifier("testfabric", "display_block"), ModItems.DISPLAY_BLOCK);
 
+        Registry.register(Registries.ITEM, new Identifier("testfabric", "steel_ingot"), ModItems.STEEL_MATERIAL);
+        Registry.register(Registries.ITEM, new Identifier("testfabric", "steel_helmet"), ModItems.STEEL_HELMET);
+        Registry.register(Registries.ITEM, new Identifier("testfabric", "steel_chestplate"), ModItems.STEEL_CHESTPLATE);
+        Registry.register(Registries.ITEM, new Identifier("testfabric", "steel_leggings"), ModItems.STEEL_LEGGINGS);
+        Registry.register(Registries.ITEM, new Identifier("testfabric", "steel_boots"), ModItems.STEEL_BOOTS);
 
         Registry.register(Registries.BLOCK, new Identifier("testfabric", "redstone_transform_engine"), ModBlocks.REDSTONE_TRANSFORM_ENGINE);
         Registry.register(Registries.BLOCK, new Identifier("testfabric", "mining_machine"), ModBlocks.MINING_MACHINE_BLOCK);
@@ -89,6 +78,11 @@ public class TestFabric implements ModInitializer {
             context.add(ModItems.TRANSPORT_PIPE);
             context.add(ModItems.DISPLAY_BLOCK);
             context.add(ModItems.TRANSPORT_COMBINER);
+            context.add(ModItems.STEEL_MATERIAL);
+            context.add(ModItems.STEEL_HELMET);
+            context.add(ModItems.STEEL_CHESTPLATE);
+            context.add(ModItems.STEEL_LEGGINGS);
+            context.add(ModItems.STEEL_BOOTS);
         });
 
 //        ItemGroupEvents.modifyEntriesEvent(ItemGroups.FOOD_AND_DRINK).register((ctx) -> {

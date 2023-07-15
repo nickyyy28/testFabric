@@ -6,7 +6,7 @@
   "description": "",
   "authors": [],
   "contact": {
-    "repo": "https://github.com/nickyyy/TestFabric"
+    "repo": "https://github.com/nickyyy28/testFabric"
   },
   "license": "MIT",
   "icon": "assets/TestFabric/icon.png",
@@ -16,7 +16,7 @@
       "com.nickyyy.testfabric.client.TestFabricClient"
     ],
     "main": [
-      "com.nickyyy.testfabric.TestFabric"
+      "com.nickyyy.testfabric.ModMain"
     ]
   },
   "mixins": [

@@ -5,8 +5,13 @@
   "block.testfabric.redstone_transform_engine": "RedStone Transform Engine",
   "block.testfabric.mining_machine": "Mining Machine",
   "block.testfabric.vertical_half_brick": "Vertical Half Brick",
-  "item_group.testfabric.mod_item_tab": "Test Fabric",
+  "item_group.testfabric.mod_item_tab": "Future Industry: Automation",
   "block.testfabric.transport_pipe": "Basic Transport Pipe",
   "block.testfabric.display_block": "Display Block",
-  "block.testfabric.transport_combiner": "Transport Combiner"
+  "block.testfabric.transport_combiner": "Transport Combiner",
+  "item.testfabric.steel_ingot": "Steel Ingot",
+  "item.testfabric.steel_helmet": "Steel Helmet",
+  "item.testfabric.steel_chestplate": "Steel Chestplate",
+  "item.testfabric.steel_leggings": "Steel Leggings",
+  "item.testfabric.steel_boots": "Steel Boots"
 }

@@ -12,6 +12,9 @@
   "icon": "assets/TestFabric/icon.png",
   "environment": "*",
   "entrypoints": {
+    "fabric-datagen": [
+      "com.nickyyy.testfabric.generator.DataGeneration"
+    ],
     "client": [
       "com.nickyyy.testfabric.client.TestFabricClient"
     ],

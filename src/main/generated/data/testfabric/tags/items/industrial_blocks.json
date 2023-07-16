@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "testfabric:transport_combiner",
+    "testfabric:display_block",
+    "testfabric:mining_machine",
+    "testfabric:transport_pipe"
+  ]
+}

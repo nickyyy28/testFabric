@@ -1,0 +1,38 @@
+{
+  "criteria": {
+    "industrial_start": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "testfabric:transport_combiner"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "background": "minecraft:",
+    "description": {
+      "text": "aaa"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "testfabric:mining_machine"
+    },
+    "show_toast": true,
+    "title": {
+      "text": "工业时代！起步！"
+    }
+  },
+  "requirements": [
+    [
+      "industrial_start"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

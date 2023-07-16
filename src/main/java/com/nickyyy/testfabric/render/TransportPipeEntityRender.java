@@ -24,7 +24,7 @@ public class TransportPipeEntityRender implements BlockEntityRenderer<TransportP
     @Override
     public void render(TransportPipeEntity entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
         matrices.push();
-        double percent = entity.getWorld().getTime() % TransportPipeEntity.MAX_COOLING / 4.0;
+        double percent = entity.getWorld().getTime() % 8 / 8.0;
         if (entity.display() != ItemStack.EMPTY) {
             double[] movePos = getMovePos(entity, percent);
             matrices.translate(movePos[0], movePos[1], movePos[2]);

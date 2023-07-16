@@ -13,5 +13,7 @@
   "item.testfabric.steel_helmet": "Steel Helmet",
   "item.testfabric.steel_chestplate": "Steel Chestplate",
   "item.testfabric.steel_leggings": "Steel Leggings",
-  "item.testfabric.steel_boots": "Steel Boots"
+  "item.testfabric.steel_boots": "Steel Boots",
+
+  "item.testfabric.horn.tooltip": "This is a horn, use it to say something"
 }

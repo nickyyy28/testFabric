@@ -30,10 +30,13 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Objects;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class TransportPipeBlock extends BlockWithEntity {
+
+    public static final HashSet<Block> SIMILAR_BLOCK_SET = Stream.of(ModBlocks.TRANSPORT_PIPE_BLOCK, ModBlocks.TRANSPORT_COMBINER_BLOCK).collect(Collectors.toCollection(HashSet::new));
 
     public static final VoxelShape BASIC_SHAPE = VoxelShapes.cuboid(0.25f, 0.25f, 0.25f, 0.75f, 0.75f, 0.75f);
 
@@ -349,7 +352,8 @@ public class TransportPipeBlock extends BlockWithEntity {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        if (!world.isClient()) return checkType(type, ModEntities.TRANSPORT_PIPE_ENTITY, TransportPipeEntity::server_tick);
+        if (!world.isClient())
+            return checkType(type, ModEntities.TRANSPORT_PIPE_ENTITY, TransportPipeEntity::server_tick);
         return checkType(type, ModEntities.TRANSPORT_PIPE_ENTITY, TransportPipeEntity::client_tick);
     }
 }

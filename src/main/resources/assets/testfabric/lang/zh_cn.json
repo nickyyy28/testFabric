@@ -1,5 +1,6 @@
 {
   "item.testfabric.strawberry": "草莓",
+  "item.testfabric.strawberry.tooltip": "甜甜的草莓, 吃了会有好心情",
   "item.testfabric.horn": "喇叭",
   "item.testfabric.redstone_transform_engine": "红石转化引擎",
   "block.testfabric.redstone_transform_engine": "红石转化引擎",
@@ -13,5 +14,6 @@
   "item.testfabric.steel_helmet": "钢头盔",
   "item.testfabric.steel_chestplate": "钢胸甲",
   "item.testfabric.steel_leggings": "钢护腿",
-  "item.testfabric.steel_boots": "钢靴子"
+  "item.testfabric.steel_boots": "钢靴子",
+  "item.testfabric.horn.tooltip": "这是一个喇叭, 使用时会输出信息"
 }

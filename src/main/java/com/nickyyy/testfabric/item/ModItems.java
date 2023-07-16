@@ -3,14 +3,19 @@ package com.nickyyy.testfabric.item;
 import com.nickyyy.testfabric.block.ModBlocks;
 import com.nickyyy.testfabric.weapons.SteelArmorMaterial;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
+import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.item.ArmorItem;
-import net.minecraft.item.ArmorMaterial;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
+import net.minecraft.item.*;
+import net.minecraft.text.MutableText;
+import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
+import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 public class ModItems {
-    public static final Item STRAWBERRY = new Item(new FabricItemSettings().food(ModFoodComponents.STRAWBERRY).maxCount(64));
+    public static final Item STRAWBERRY = new ModItem(new FabricItemSettings().food(ModFoodComponents.STRAWBERRY).maxCount(64)).setToolTip((stack, world, tooltip, context) -> tooltip.add(Text.translatable("item.testfabric.strawberry.tooltip").formatted(Formatting.YELLOW)));
     public static final Item HORN = new HornItem(new Item.Settings().maxCount(1));
     public static final Item REDSTONE_TRANSFORM_ENGINE = new BlockItem(ModBlocks.REDSTONE_TRANSFORM_ENGINE, new FabricItemSettings().maxCount(64));
     public static final Item MINING_MACHINE = new BlockItem(ModBlocks.MINING_MACHINE_BLOCK, new FabricItemSettings().maxCount(64));

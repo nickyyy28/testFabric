@@ -26,27 +26,10 @@ public class ModMain implements ModInitializer {
      */
     @Override
     public void onInitialize() {
-        Registry.register(Registries.ITEM, new Identifier("testfabric", "strawberry"), ModItems.STRAWBERRY);
-        Registry.register(Registries.ITEM, new Identifier("testfabric", "horn"), ModItems.HORN);
-        Registry.register(Registries.ITEM, new Identifier("testfabric", "redstone_transform_engine"), ModItems.REDSTONE_TRANSFORM_ENGINE);
-        Registry.register(Registries.ITEM, new Identifier("testfabric", "mining_machine"), ModItems.MINING_MACHINE);
-        Registry.register(Registries.ITEM, new Identifier("testfabric", "vertical_half_brick"), ModItems.VERTICAL_HALF_BRICK);
-        Registry.register(Registries.ITEM, new Identifier("testfabric", "transport_pipe"), ModItems.TRANSPORT_PIPE);
-        Registry.register(Registries.ITEM, new Identifier("testfabric", "transport_combiner"), ModItems.TRANSPORT_COMBINER);
-        Registry.register(Registries.ITEM, new Identifier("testfabric", "display_block"), ModItems.DISPLAY_BLOCK);
 
-        Registry.register(Registries.ITEM, new Identifier("testfabric", "steel_ingot"), ModItems.STEEL_MATERIAL);
-        Registry.register(Registries.ITEM, new Identifier("testfabric", "steel_helmet"), ModItems.STEEL_HELMET);
-        Registry.register(Registries.ITEM, new Identifier("testfabric", "steel_chestplate"), ModItems.STEEL_CHESTPLATE);
-        Registry.register(Registries.ITEM, new Identifier("testfabric", "steel_leggings"), ModItems.STEEL_LEGGINGS);
-        Registry.register(Registries.ITEM, new Identifier("testfabric", "steel_boots"), ModItems.STEEL_BOOTS);
-
-        Registry.register(Registries.BLOCK, new Identifier("testfabric", "redstone_transform_engine"), ModBlocks.REDSTONE_TRANSFORM_ENGINE);
-        Registry.register(Registries.BLOCK, new Identifier("testfabric", "mining_machine"), ModBlocks.MINING_MACHINE_BLOCK);
-        Registry.register(Registries.BLOCK, new Identifier("testfabric", "vertical_half_brick"), ModBlocks.VERTICAL_HALF_BRICK_BLOCK);
-        Registry.register(Registries.BLOCK, new Identifier("testfabric", "transport_pipe"), ModBlocks.TRANSPORT_PIPE_BLOCK);
-        Registry.register(Registries.BLOCK, new Identifier("testfabric", "transport_combiner"), ModBlocks.TRANSPORT_COMBINER_BLOCK);
-        Registry.register(Registries.BLOCK, new Identifier("testfabric", "display_block"), ModBlocks.DISPLAY_BLOCK);
+        registerItems();
+        registerBlocks();
+        registerEntities();
 
         BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.TRANSPORT_PIPE_BLOCK, RenderLayer.getTranslucent());
         BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.DISPLAY_BLOCK, RenderLayer.getTranslucent());
@@ -59,14 +42,7 @@ public class ModMain implements ModInitializer {
 //        ScreenRegistry.register(ModScreenHandlers.TRANSPORT_COMBINER_SCREEN_HANDLER, TransportCombinerScreen::new);
 
 
-        Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier("testfabric", "mining_machine_entity"),
-                ModEntities.MINING_MACHINE_BLOCK_ENTITY);
-        Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier("testfabric", "display_block_entity"),
-                ModEntities.DISPLAY_BLOCK_ENTITY);
-        Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier("testfabric", "transport_pipe_entity"),
-                ModEntities.TRANSPORT_PIPE_ENTITY);
-        Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier("testfabric", "transport_combiner_entity"),
-                ModEntities.TRANSPORT_COMBINER_BLOCK_ENTITY);
+
 
         CompostingChanceRegistry.INSTANCE.add(ModItems.STRAWBERRY, 300.0F);
         ItemGroupEvents.modifyEntriesEvent(ModItemGroup.MOD_ITEM_GROUP).register((context) -> {
@@ -84,9 +60,42 @@ public class ModMain implements ModInitializer {
             context.add(ModItems.STEEL_LEGGINGS);
             context.add(ModItems.STEEL_BOOTS);
         });
+    }
 
-//        ItemGroupEvents.modifyEntriesEvent(ItemGroups.FOOD_AND_DRINK).register((ctx) -> {
-//            ctx.add(ModItems.STRAWBERRY);
-//        });
+    public void registerItems() {
+        Registry.register(Registries.ITEM, new Identifier("testfabric", "strawberry"), ModItems.STRAWBERRY);
+        Registry.register(Registries.ITEM, new Identifier("testfabric", "horn"), ModItems.HORN);
+        Registry.register(Registries.ITEM, new Identifier("testfabric", "redstone_transform_engine"), ModItems.REDSTONE_TRANSFORM_ENGINE);
+        Registry.register(Registries.ITEM, new Identifier("testfabric", "mining_machine"), ModItems.MINING_MACHINE);
+        Registry.register(Registries.ITEM, new Identifier("testfabric", "vertical_half_brick"), ModItems.VERTICAL_HALF_BRICK);
+        Registry.register(Registries.ITEM, new Identifier("testfabric", "transport_pipe"), ModItems.TRANSPORT_PIPE);
+        Registry.register(Registries.ITEM, new Identifier("testfabric", "transport_combiner"), ModItems.TRANSPORT_COMBINER);
+        Registry.register(Registries.ITEM, new Identifier("testfabric", "display_block"), ModItems.DISPLAY_BLOCK);
+
+        Registry.register(Registries.ITEM, new Identifier("testfabric", "steel_ingot"), ModItems.STEEL_MATERIAL);
+        Registry.register(Registries.ITEM, new Identifier("testfabric", "steel_helmet"), ModItems.STEEL_HELMET);
+        Registry.register(Registries.ITEM, new Identifier("testfabric", "steel_chestplate"), ModItems.STEEL_CHESTPLATE);
+        Registry.register(Registries.ITEM, new Identifier("testfabric", "steel_leggings"), ModItems.STEEL_LEGGINGS);
+        Registry.register(Registries.ITEM, new Identifier("testfabric", "steel_boots"), ModItems.STEEL_BOOTS);
+    }
+
+    public void registerBlocks() {
+        Registry.register(Registries.BLOCK, new Identifier("testfabric", "redstone_transform_engine"), ModBlocks.REDSTONE_TRANSFORM_ENGINE);
+        Registry.register(Registries.BLOCK, new Identifier("testfabric", "mining_machine"), ModBlocks.MINING_MACHINE_BLOCK);
+        Registry.register(Registries.BLOCK, new Identifier("testfabric", "vertical_half_brick"), ModBlocks.VERTICAL_HALF_BRICK_BLOCK);
+        Registry.register(Registries.BLOCK, new Identifier("testfabric", "transport_pipe"), ModBlocks.TRANSPORT_PIPE_BLOCK);
+        Registry.register(Registries.BLOCK, new Identifier("testfabric", "transport_combiner"), ModBlocks.TRANSPORT_COMBINER_BLOCK);
+        Registry.register(Registries.BLOCK, new Identifier("testfabric", "display_block"), ModBlocks.DISPLAY_BLOCK);
+    }
+
+    public void registerEntities() {
+        Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier("testfabric", "mining_machine_entity"),
+                ModEntities.MINING_MACHINE_BLOCK_ENTITY);
+        Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier("testfabric", "display_block_entity"),
+                ModEntities.DISPLAY_BLOCK_ENTITY);
+        Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier("testfabric", "transport_pipe_entity"),
+                ModEntities.TRANSPORT_PIPE_ENTITY);
+        Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier("testfabric", "transport_combiner_entity"),
+                ModEntities.TRANSPORT_COMBINER_BLOCK_ENTITY);
     }
 }

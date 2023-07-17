@@ -1,11 +1,19 @@
 package com.nickyyy.testfabric.entity;
 
+import com.nickyyy.testfabric.screen.PipeFilterScreenHandler;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.LootableContainerBlockEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.SidedInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.ScreenHandler;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
@@ -13,9 +21,8 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
-public class PipeFilterBlockEntity extends LootableContainerBlockEntity implements BlockEntityInventory, SidedInventory {
-    private DefaultedList<ItemStack> items = DefaultedList.ofSize(9, ItemStack.EMPTY);
-    private DefaultedList<ItemStack> filterItems = DefaultedList.ofSize(6, ItemStack.EMPTY);
+public class PipeFilterBlockEntity extends LootableContainerBlockEntity implements BlockEntityInventory, SidedInventory, ExtendedScreenHandlerFactory {
+    private DefaultedList<ItemStack> items = DefaultedList.ofSize(15, ItemStack.EMPTY);
 
     public static final int MAX_COOLING = 4;
 
@@ -41,13 +48,35 @@ public class PipeFilterBlockEntity extends LootableContainerBlockEntity implemen
     }
 
     @Override
+    protected void writeNbt(NbtCompound nbt) {
+        nbt.putInt("cooling", this.cooling);
+        Inventories.writeNbt(nbt, items);
+        super.writeNbt(nbt);
+    }
+
+    @Override
+    public void readNbt(NbtCompound nbt) {
+        super.readNbt(nbt);
+        Inventories.readNbt(nbt, items);
+        this.cooling = nbt.getInt("cooling");
+    }
+
+    @Override
     protected Text getContainerName() {
         return Text.translatable(getCachedState().getBlock().getTranslationKey());
     }
 
     @Override
     protected ScreenHandler createScreenHandler(int syncId, PlayerInventory playerInventory) {
-        return null;
+        PacketByteBuf buf = PacketByteBufs.create();
+        buf.writeBlockPos(this.getPos());
+        return new PipeFilterScreenHandler(syncId, playerInventory, buf);
+    }
+
+    @Nullable
+    @Override
+    public ScreenHandler createMenu(int i, PlayerInventory playerInventory, PlayerEntity playerEntity) {
+        return new PipeFilterScreenHandler(i, playerInventory, this);
     }
 
     @Override
@@ -67,5 +96,15 @@ public class PipeFilterBlockEntity extends LootableContainerBlockEntity implemen
 
     public static void server_tick(World world, BlockPos pos, BlockState state, PipeFilterBlockEntity entity) {
 
+    }
+
+    @Override
+    public void writeScreenOpeningData(ServerPlayerEntity player, PacketByteBuf buf) {
+        buf.writeBlockPos(this.getPos());
+    }
+
+    @Override
+    public int size() {
+        return items.size();
     }
 }

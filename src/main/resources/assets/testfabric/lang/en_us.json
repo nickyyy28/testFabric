@@ -1,5 +1,6 @@
 {
   "item.testfabric.strawberry": "Strawberry",
+  "item.testfabric.strawberry.tooltip": "Sweet Strawberry",
   "item.testfabric.horn": "Horn",
   "item.testfabric.redstone_transform_engine": "RedStone Transform Engine",
   "block.testfabric.redstone_transform_engine": "RedStone Transform Engine",
@@ -14,6 +15,7 @@
   "item.testfabric.steel_chestplate": "Steel Chestplate",
   "item.testfabric.steel_leggings": "Steel Leggings",
   "item.testfabric.steel_boots": "Steel Boots",
+  "item.testfabric.horn.tooltip": "This is a horn, use it to say something",
+  "block.testfabric.pipe_filter": "Pipe Filter"
 
-  "item.testfabric.horn.tooltip": "This is a horn, use it to say something"
 }

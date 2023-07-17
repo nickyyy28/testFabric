@@ -26,7 +26,7 @@
       "model": "testfabric:block/pipe_filter_wes"
     },
     "filter_shape=7": {
-      "model": "testfabric:block/pipe_filter",
+      "model": "testfabric:block/pipe_filter_wes",
       "x": 90
     }
   }

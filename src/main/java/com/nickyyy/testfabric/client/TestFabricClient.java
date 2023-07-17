@@ -5,6 +5,7 @@ import com.nickyyy.testfabric.entity.TransportPipeBlockEntity;
 import com.nickyyy.testfabric.render.DisplayBlockEntityRender;
 import com.nickyyy.testfabric.render.TransportPipeEntityRender;
 import com.nickyyy.testfabric.screen.ModScreenHandlers;
+import com.nickyyy.testfabric.screen.PipeFilterScreen;
 import com.nickyyy.testfabric.screen.TransportCombinerScreen;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
@@ -27,6 +28,7 @@ public class TestFabricClient implements ClientModInitializer {
         BlockEntityRendererFactories.register(ModEntities.TRANSPORT_PIPE_ENTITY, TransportPipeEntityRender::new);
 
         ScreenRegistry.register(ModScreenHandlers.TRANSPORT_COMBINER_SCREEN_HANDLER, TransportCombinerScreen::new);
+        ScreenRegistry.register(ModScreenHandlers.PIPE_FILTER_SCREEN_HANDLER, PipeFilterScreen::new);
 
         ClientPlayNetworking.registerGlobalReceiver(TransportPipeBlockEntity.TRANSPORT_ENTITY_PACKET_ID, ((client, handler, buf, responseSender) -> {
             ItemStack stack = buf.readItemStack();

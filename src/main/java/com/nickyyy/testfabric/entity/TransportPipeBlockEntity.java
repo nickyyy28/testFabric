@@ -471,14 +471,11 @@ public class TransportPipeBlockEntity extends LootableContainerBlockEntity imple
                 findTransferDirection = false;
                 from = null;
                 to = null;
-//                ModLog.LOGGER.info("SHAPE < 7");
                 return;
             }
 
             Pair<Direction> pair = getDirectionPair(shape);
             BlockPos newPos = posMove(pos, pair.var1);
-//            ModLog.LOGGER.info("方块位置:" + pos.toShortString());
-//            ModLog.LOGGER.info("搜索方块位置:" + newPos.toShortString() + " 方向: " + pair.var1.toString());
             if (world.getBlockEntity(newPos) instanceof TransportPipeBlockEntity) {
 //                ModLog.LOGGER.info("找到管道");
                 TransportPipeBlockEntity entity = ((TransportPipeBlockEntity) world.getBlockEntity(newPos));

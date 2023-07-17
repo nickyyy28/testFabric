@@ -10,4 +10,5 @@ import net.minecraft.util.Identifier;
 public class ModScreenHandlers {
     public static final ScreenHandlerType<TransportCombinerScreenHandler> TRANSPORT_COMBINER_SCREEN_HANDLER = ScreenHandlerRegistry.registerSimple(new Identifier("testfabric", "transport_combiner"), TransportCombinerScreenHandler::new);
     public static final ScreenHandlerType<TransportPipeScreenHandler> TRANSPORT_PIPE_SCREEN_HANDLER = ScreenHandlerRegistry.registerExtended(new Identifier("testfabric", "transport_pipe"), TransportPipeScreenHandler::new);
+    public static final ScreenHandlerType<PipeFilterScreenHandler> PIPE_FILTER_SCREEN_HANDLER = ScreenHandlerRegistry.registerExtended(new Identifier("testfabric", "pipe_filter"), PipeFilterScreenHandler::new);
 }

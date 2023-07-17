@@ -1,5 +1,6 @@
 package com.nickyyy.testfabric.entity;
 
+import com.nickyyy.testfabric.block.PipeFilterBlock;
 import com.nickyyy.testfabric.screen.PipeFilterScreenHandler;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
@@ -8,7 +9,9 @@ import net.minecraft.block.entity.LootableContainerBlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventories;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SidedInventory;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
@@ -27,6 +30,10 @@ public class PipeFilterBlockEntity extends LootableContainerBlockEntity implemen
     public static final int MAX_COOLING = 4;
 
     private int cooling = -1;
+
+    private boolean findTransferDirection = false;
+
+    private Direction from = null, to = null, otherTo = null;
 
     public PipeFilterBlockEntity(BlockPos blockPos, BlockState blockState) {
         super(ModEntities.PIPE_FILTER_ENTITY, blockPos, blockState);
@@ -80,22 +87,72 @@ public class PipeFilterBlockEntity extends LootableContainerBlockEntity implemen
     }
 
     @Override
+    public void setStack(int slot, ItemStack stack) {
+        checkLootInteraction(null);
+        items.set(slot, stack);
+        if (stack.getCount() > this.getMaxCountPerStack()) {
+            stack.setCount(this.getMaxCountPerStack());
+        }
+    }
+
+    @Override
     public int[] getAvailableSlots(Direction side) {
-        return new int[0];
+        int[] result = new int[getItems().size() - 6];
+        for (int i = 0 ; i < result.length ; i++) {
+//            ItemStack itemStack = items.get(i);
+//            boolean isFiltered = false;
+//            Item item = itemStack.getItem();
+//            for (int filterItem = 9 ; filterItem < items.size() ; ++filterItem) {
+//                if (items.get(filterItem) == itemStack) {
+//
+//                }
+//            }
+            result[i] = i;
+        }
+        return result;
     }
 
     @Override
     public boolean canInsert(int slot, ItemStack stack, @Nullable Direction dir) {
-        return false;
+        return dir == from;
     }
 
     @Override
     public boolean canExtract(int slot, ItemStack stack, Direction dir) {
-        return false;
+        return dir == to || dir == otherTo;
     }
 
     public static void server_tick(World world, BlockPos pos, BlockState state, PipeFilterBlockEntity entity) {
 
+    }
+
+    private static Inventory getOutputInventory(World world, BlockPos pos, BlockState state) {
+        return TransportPipeBlockEntity.getInventoryByDirection(world, pos, ((PipeFilterBlockEntity) world.getBlockEntity(pos)).to);
+    }
+
+    private static Inventory getOtherOutputInventory(World world, BlockPos pos, BlockState state) {
+        return TransportPipeBlockEntity.getInventoryByDirection(world, pos, ((PipeFilterBlockEntity) world.getBlockEntity(pos)).otherTo);
+    }
+
+    private static Inventory getInputInventory(World world, BlockPos pos, BlockState state) {
+        return TransportPipeBlockEntity.getInventoryByDirection(world, pos, ((PipeFilterBlockEntity) world.getBlockEntity(pos)).from);
+    }
+
+    public static boolean CanTransfer(World world, BlockPos pos, BlockState state) {
+        if (!(world.getBlockEntity(pos) instanceof PipeFilterBlockEntity)) {
+            return false;
+        }
+
+        PipeFilterBlockEntity entity = (PipeFilterBlockEntity) world.getBlockEntity(pos);
+        assert entity != null;
+        return entity.findTransferDirection;
+    }
+
+    private void updateState(World world, BlockPos pos, BlockState state) {
+        if (!world.isClient()) {
+            int shape = state.get(PipeFilterBlock.FILTER_SHAPE);
+
+        }
     }
 
     @Override

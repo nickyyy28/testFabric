@@ -449,7 +449,7 @@ public class TransportPipeBlockEntity extends LootableContainerBlockEntity imple
         return (Inventory) entity1;
     }
 
-    private static Inventory getInventoryByDirection(World world, BlockPos pos, Direction direction) {
+    public static Inventory getInventoryByDirection(World world, BlockPos pos, Direction direction) {
         return (Inventory) world.getBlockEntity(posMove(pos, direction));
     }
 
@@ -460,8 +460,7 @@ public class TransportPipeBlockEntity extends LootableContainerBlockEntity imple
         if (state.get(TransportPipeBlock.PIPE_SHAPE) < 7) return false;
         TransportPipeBlockEntity entity = (TransportPipeBlockEntity) world.getBlockEntity(pos);
         assert entity != null;
-        if (!entity.findTransferDirection) return false;
-        return true;
+        return entity.findTransferDirection;
     }
 
     private void updateState(World world, BlockPos pos, BlockState state) {

@@ -16,7 +16,8 @@ import java.util.Optional;
 public class PipeFilterScreen extends HandledScreen<PipeFilterScreenHandler> {
     private static final Identifier TEXTURE = new Identifier("testfabric", "textures/gui/container/pipe_filter.png");
     public PipeFilterScreen(PipeFilterScreenHandler handler, PlayerInventory inventory, Text title) {
-        super(handler, inventory, getPositionText(handler).orElse(title));
+//        super(handler, inventory, getPositionText(handler).orElse(title));
+        super(handler, inventory, Text.translatable("block.testfabric.pipe_filter"));
     }
 
     //此方法将尝试从 ScreenHandler 获取位置，因为 ScreenRendering 仅发生在客户端上，
@@ -39,6 +40,7 @@ public class PipeFilterScreen extends HandledScreen<PipeFilterScreenHandler> {
         int y = (height - backgroundHeight) / 2;
 
         context.drawTexture(TEXTURE, x, y, 0, 0, backgroundWidth, backgroundHeight);
+//        context.drawText()
     }
 
     @Override

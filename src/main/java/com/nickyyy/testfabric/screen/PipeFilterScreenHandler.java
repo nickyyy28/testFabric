@@ -1,5 +1,6 @@
 package com.nickyyy.testfabric.screen;
 
+import com.nickyyy.testfabric.util.ModLog;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
@@ -60,6 +61,7 @@ public class PipeFilterScreenHandler extends ScreenHandler {
     @Override
     public ItemStack quickMove(PlayerEntity player, int invSlot) {
         ItemStack newStack = ItemStack.EMPTY;
+        ModLog.LOGGER.info("move slot:" + invSlot);
         Slot slot = this.slots.get(invSlot);
         if (slot != null && slot.hasStack()) {
             ItemStack originalStack = slot.getStack();
@@ -68,7 +70,7 @@ public class PipeFilterScreenHandler extends ScreenHandler {
                 if (!this.insertItem(originalStack, this.inventory.size(), this.slots.size(), true)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (!this.insertItem(originalStack, 0, this.inventory.size(), false)) {
+            } else if (!this.insertItem(originalStack, 0, this.inventory.size() - 6, false)) {
                 return ItemStack.EMPTY;
             }
 

@@ -21,4 +21,5 @@ public class ModBlocks {
     public static final TransportPipeBlock TRANSPORT_PIPE_BLOCK = new TransportPipeBlock(FabricBlockSettings.create().hardness(4.0f));
     public static final DisplayBlock DISPLAY_BLOCK = new DisplayBlock(FabricBlockSettings.create().hardness(4.0f));
     public static final TransportCombinerBlock TRANSPORT_COMBINER_BLOCK = new TransportCombinerBlock(FabricBlockSettings.create().hardness(4.0f));
+    public static final PipeFilterBlock PIPE_FILTER_BLOCK = new PipeFilterBlock(FabricBlockSettings.create().hardness(4.0f));
 }

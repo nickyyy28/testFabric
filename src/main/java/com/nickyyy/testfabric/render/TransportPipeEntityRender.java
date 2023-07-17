@@ -1,6 +1,6 @@
 package com.nickyyy.testfabric.render;
 
-import com.nickyyy.testfabric.entity.TransportPipeEntity;
+import com.nickyyy.testfabric.entity.TransportPipeBlockEntity;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
@@ -14,7 +14,7 @@ import net.minecraft.util.math.Vec3d;
 
 import static net.minecraft.util.math.RotationAxis.POSITIVE_Y;
 
-public class TransportPipeEntityRender implements BlockEntityRenderer<TransportPipeEntity> {
+public class TransportPipeEntityRender implements BlockEntityRenderer<TransportPipeBlockEntity> {
     private final ItemRenderer renderer;
 
     public TransportPipeEntityRender(BlockEntityRendererFactory.Context context) {
@@ -22,7 +22,7 @@ public class TransportPipeEntityRender implements BlockEntityRenderer<TransportP
     }
 
     @Override
-    public void render(TransportPipeEntity entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
+    public void render(TransportPipeBlockEntity entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
         matrices.push();
         double percent = entity.getWorld().getTime() % 8 / 8.0;
         if (entity.display() != ItemStack.EMPTY) {
@@ -34,7 +34,7 @@ public class TransportPipeEntityRender implements BlockEntityRenderer<TransportP
         matrices.pop();
     }
 
-    public double[] getMovePos(TransportPipeEntity entity, double percent) {
+    public double[] getMovePos(TransportPipeBlockEntity entity, double percent) {
         double[] pos = new double[3];
 
         Direction from = entity.from;

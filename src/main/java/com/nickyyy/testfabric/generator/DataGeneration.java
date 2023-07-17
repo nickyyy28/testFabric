@@ -6,6 +6,7 @@ import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricAdvancementProvider;
+import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.minecraft.advancement.Advancement;
 import net.minecraft.advancement.AdvancementFrame;
@@ -81,6 +82,18 @@ public class DataGeneration implements DataGeneratorEntrypoint {
                         .criterion("industrial_start", InventoryChangedCriterion.Conditions.items(ModItems.TRANSPORT_COMBINER))
                         .build(advancementConsumer, "testfabric" + "/root");
             }
+        }
+    }
+
+    private static class EnglishLanguageProvider extends FabricLanguageProvider{
+
+        protected EnglishLanguageProvider(FabricDataOutput dataOutput) {
+            super(dataOutput, "en_us");
+        }
+
+        @Override
+        public void generateTranslations(TranslationBuilder translationBuilder) {
+
         }
     }
 }

@@ -5,12 +5,9 @@ import com.nickyyy.testfabric.block.TransportPipeBlock;
 import com.nickyyy.testfabric.screen.TransportPipeScreenHandler;
 import com.nickyyy.testfabric.util.ModLog;
 import com.nickyyy.testfabric.util.Pair;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.LootableContainerBlockEntity;
@@ -33,20 +30,18 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
 import java.util.Objects;
 import java.util.function.BooleanSupplier;
 import java.util.stream.IntStream;
 
-public class TransportPipeEntity extends LootableContainerBlockEntity implements BlockEntityInventory, SidedInventory {
+public class TransportPipeBlockEntity extends LootableContainerBlockEntity implements BlockEntityInventory, SidedInventory {
     private DefaultedList<ItemStack> items = DefaultedList.ofSize(1, ItemStack.EMPTY);
     private ItemStack itemToDisplay = ItemStack.EMPTY;
 
-    public static TransportPipeEntity debugEntity = null;
+    public static TransportPipeBlockEntity debugEntity = null;
 
     public Direction from = null;
     public Direction to = null;
@@ -57,7 +52,7 @@ public class TransportPipeEntity extends LootableContainerBlockEntity implements
     private int cooling = -1;
     private long lastTickTime;
 
-    public TransportPipeEntity(BlockPos pos, BlockState state) {
+    public TransportPipeBlockEntity(BlockPos pos, BlockState state) {
         super(ModEntities.TRANSPORT_PIPE_ENTITY, pos, state);
     }
 
@@ -148,7 +143,7 @@ public class TransportPipeEntity extends LootableContainerBlockEntity implements
         };
     }
 
-    public static void server_tick(World world, BlockPos pos, BlockState state, TransportPipeEntity entity) {
+    public static void server_tick(World world, BlockPos pos, BlockState state, TransportPipeBlockEntity entity) {
         entity.cooling--;
         entity.updateState(world, pos, state);
         long nowTime = world.getTime();
@@ -186,11 +181,11 @@ public class TransportPipeEntity extends LootableContainerBlockEntity implements
         if (CanTransfer(world, pos, state) && !entity.needsCooling()) {
             entity.setCooling(0);
 //            if (debugEntity == entity) ModLog.LOGGER.info("start insert adn extract");
-            insertAndExtract(world, pos, state, entity, () -> TransportPipeEntity.extract(world, entity));
+            insertAndExtract(world, pos, state, entity, () -> TransportPipeBlockEntity.extract(world, entity));
         }
     }
 
-    public static void client_tick(World world, BlockPos pos, BlockState state, TransportPipeEntity entity) {
+    public static void client_tick(World world, BlockPos pos, BlockState state, TransportPipeBlockEntity entity) {
 
     }
 
@@ -198,14 +193,14 @@ public class TransportPipeEntity extends LootableContainerBlockEntity implements
         return this.cooling > 0;
     }
 
-    private static boolean extract(World world, TransportPipeEntity entity) {
+    private static boolean extract(World world, TransportPipeBlockEntity entity) {
         Inventory inventory = getInputInventory(world, entity);
         if (inventory != null) {
             Direction direction = Direction.DOWN;
             if (isInventoryEmpty(inventory, direction)) {
                 return false;
             }
-            return getAvailableSlots(inventory, direction).anyMatch(slot -> TransportPipeEntity.extract(entity, inventory, slot, direction));
+            return getAvailableSlots(inventory, direction).anyMatch(slot -> TransportPipeBlockEntity.extract(entity, inventory, slot, direction));
         }
 //        for (ItemEntity itemEntity : TransportCombinerBlockEntity.getInputItemEntities(world, entity)) {
 //            if (!TransportCombinerBlockEntity.extract(entity, itemEntity)) continue;
@@ -214,7 +209,7 @@ public class TransportPipeEntity extends LootableContainerBlockEntity implements
         return false;
     }
 
-    private static boolean extract(TransportPipeEntity entity, Inventory inventory, int slot, Direction side) {
+    private static boolean extract(TransportPipeBlockEntity entity, Inventory inventory, int slot, Direction side) {
         ItemStack itemStack = inventory.getStack(slot);
         if (!itemStack.isEmpty() && canExtract(entity, inventory, itemStack, slot, side)) {
             ItemStack itemStack2 = itemStack.copy();
@@ -228,7 +223,7 @@ public class TransportPipeEntity extends LootableContainerBlockEntity implements
         return false;
     }
 
-    private static boolean canExtract(TransportPipeEntity entity, Inventory fromInventory, ItemStack itemStack, int slot, Direction side) {
+    private static boolean canExtract(TransportPipeBlockEntity entity, Inventory fromInventory, ItemStack itemStack, int slot, Direction side) {
         SidedInventory sidedInventory;
         if (!fromInventory.canTransferTo(entity, slot, itemStack)) {
             return false;
@@ -236,7 +231,7 @@ public class TransportPipeEntity extends LootableContainerBlockEntity implements
         return !(fromInventory instanceof SidedInventory) || (sidedInventory = (SidedInventory) fromInventory).canExtract(slot, itemStack, side);
     }
 
-    private static boolean insertAndExtract(World world, BlockPos pos, BlockState state, TransportPipeEntity blockEntity, BooleanSupplier booleanSupplier) {
+    private static boolean insertAndExtract(World world, BlockPos pos, BlockState state, TransportPipeBlockEntity blockEntity, BooleanSupplier booleanSupplier) {
         if (world.isClient) {
             return false;
         }
@@ -260,16 +255,16 @@ public class TransportPipeEntity extends LootableContainerBlockEntity implements
     private static boolean insert(World world, BlockPos pos, BlockState state, Inventory inventory) {
         Inventory inventory2 = getOutputInventory(world, pos, state);
         if (inventory2 == null) {
-            if (((TransportPipeEntity) world.getBlockEntity(pos)) == debugEntity) {
+            if (((TransportPipeBlockEntity) world.getBlockEntity(pos)) == debugEntity) {
                 ModLog.LOGGER.info("output inventory no found");
             }
             return false;
         }
 
 
-        Direction direction = ((TransportPipeEntity) Objects.requireNonNull(world.getBlockEntity(pos))).to.getOpposite();
+        Direction direction = ((TransportPipeBlockEntity) Objects.requireNonNull(world.getBlockEntity(pos))).to.getOpposite();
         if (isInventoryFull(inventory2, direction)) {
-            if (((TransportPipeEntity) world.getBlockEntity(pos)) == debugEntity) {
+            if (((TransportPipeBlockEntity) world.getBlockEntity(pos)) == debugEntity) {
                 ModLog.LOGGER.info("output inventory is full");
             }
             return false;
@@ -360,11 +355,11 @@ public class TransportPipeEntity extends LootableContainerBlockEntity implements
                 boolean bl3 = bl = j > 0;
             }
             if (bl) {
-                TransportPipeEntity entity;
-                if (bl2 && to instanceof TransportPipeEntity && !(entity = (TransportPipeEntity) to).isDisabled()) {
+                TransportPipeBlockEntity entity;
+                if (bl2 && to instanceof TransportPipeBlockEntity && !(entity = (TransportPipeBlockEntity) to).isDisabled()) {
                     j = 0;
-                    if (from instanceof TransportPipeEntity) {
-                        TransportPipeEntity entity1 = (TransportPipeEntity) from;
+                    if (from instanceof TransportPipeBlockEntity) {
+                        TransportPipeBlockEntity entity1 = (TransportPipeBlockEntity) from;
                         if (entity.lastTickTime >= entity1.lastTickTime) {
                             j = 1;
                         }
@@ -441,14 +436,14 @@ public class TransportPipeEntity extends LootableContainerBlockEntity implements
     }
 
     private static Inventory getOutputInventory(World world, BlockPos pos, BlockState state) {
-        return getInventoryByDirection(world, pos, ((TransportPipeEntity) world.getBlockEntity(pos)).to);
+        return getInventoryByDirection(world, pos, ((TransportPipeBlockEntity) world.getBlockEntity(pos)).to);
     }
 
     private static Inventory getInputInventory(World world, BlockPos pos, BlockState state) {
-        return getInventoryByDirection(world, pos, ((TransportPipeEntity) world.getBlockEntity(pos)).from);
+        return getInventoryByDirection(world, pos, ((TransportPipeBlockEntity) world.getBlockEntity(pos)).from);
     }
 
-    private static Inventory getInputInventory(World world, TransportPipeEntity entity) {
+    private static Inventory getInputInventory(World world, TransportPipeBlockEntity entity) {
         BlockPos pos = entity.getPos();
         BlockEntity entity1 = world.getBlockEntity(pos.offset(entity.from));
         return (Inventory) entity1;
@@ -459,11 +454,11 @@ public class TransportPipeEntity extends LootableContainerBlockEntity implements
     }
 
     public static boolean CanTransfer(World world, BlockPos pos, BlockState state) {
-        if (!(world.getBlockEntity(pos) instanceof TransportPipeEntity)) {
+        if (!(world.getBlockEntity(pos) instanceof TransportPipeBlockEntity)) {
             return false;
         }
         if (state.get(TransportPipeBlock.PIPE_SHAPE) < 7) return false;
-        TransportPipeEntity entity = (TransportPipeEntity) world.getBlockEntity(pos);
+        TransportPipeBlockEntity entity = (TransportPipeBlockEntity) world.getBlockEntity(pos);
         assert entity != null;
         if (!entity.findTransferDirection) return false;
         return true;
@@ -484,9 +479,9 @@ public class TransportPipeEntity extends LootableContainerBlockEntity implements
             BlockPos newPos = posMove(pos, pair.var1);
 //            ModLog.LOGGER.info("方块位置:" + pos.toShortString());
 //            ModLog.LOGGER.info("搜索方块位置:" + newPos.toShortString() + " 方向: " + pair.var1.toString());
-            if (world.getBlockEntity(newPos) instanceof TransportPipeEntity) {
+            if (world.getBlockEntity(newPos) instanceof TransportPipeBlockEntity) {
 //                ModLog.LOGGER.info("找到管道");
-                TransportPipeEntity entity = ((TransportPipeEntity) world.getBlockEntity(newPos));
+                TransportPipeBlockEntity entity = ((TransportPipeBlockEntity) world.getBlockEntity(newPos));
                 if (entity.findTransferDirection && entity.to.getOpposite() == pair.var1) {
                     findTransferDirection = true;
                     from = pair.var1;
@@ -508,8 +503,8 @@ public class TransportPipeEntity extends LootableContainerBlockEntity implements
             }
             newPos = posMove(pos, pair.var2);
 //            ModLog.LOGGER.info("搜索方块位置:" + newPos.toShortString() + " 方向: " + pair.var2.toString());
-            if (world.getBlockEntity(newPos) instanceof TransportPipeEntity) {
-                TransportPipeEntity entity = ((TransportPipeEntity) world.getBlockEntity(newPos));
+            if (world.getBlockEntity(newPos) instanceof TransportPipeBlockEntity) {
+                TransportPipeBlockEntity entity = ((TransportPipeBlockEntity) world.getBlockEntity(newPos));
                 if (entity.findTransferDirection && entity.to.getOpposite() == pair.var2) {
                     findTransferDirection = true;
                     from = pair.var2;

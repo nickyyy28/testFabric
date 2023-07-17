@@ -23,7 +23,7 @@ public class ModItems {
     public static final Item TRANSPORT_PIPE = new BlockItem(ModBlocks.TRANSPORT_PIPE_BLOCK, new FabricItemSettings().maxCount(64));
     public static final Item TRANSPORT_COMBINER = new BlockItem(ModBlocks.TRANSPORT_COMBINER_BLOCK, new FabricItemSettings().maxCount(64));
     public static final Item DISPLAY_BLOCK = new BlockItem(ModBlocks.DISPLAY_BLOCK, new FabricItemSettings().maxCount(64));
-
+    public static final Item PIPE_FILTER = new BlockItem(ModBlocks.PIPE_FILTER_BLOCK, new FabricItemSettings().maxCount(64));
     public static final ArmorMaterial STEEL_ARMOR_MATERIAL = new SteelArmorMaterial();
     public static final Item STEEL_MATERIAL = new Item(new Item.Settings());
     public static final Item STEEL_HELMET = new ArmorItem(STEEL_ARMOR_MATERIAL, ArmorItem.Type.HELMET, new Item.Settings().maxCount(1));

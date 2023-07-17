@@ -1,18 +1,16 @@
 package com.nickyyy.testfabric.client;
 
 import com.nickyyy.testfabric.entity.ModEntities;
-import com.nickyyy.testfabric.entity.TransportPipeEntity;
+import com.nickyyy.testfabric.entity.TransportPipeBlockEntity;
 import com.nickyyy.testfabric.render.DisplayBlockEntityRender;
 import com.nickyyy.testfabric.render.TransportPipeEntityRender;
 import com.nickyyy.testfabric.screen.ModScreenHandlers;
 import com.nickyyy.testfabric.screen.TransportCombinerScreen;
-import com.nickyyy.testfabric.util.ModLog;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
-import net.fabricmc.fabric.impl.screenhandler.client.ClientNetworking;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
@@ -30,13 +28,13 @@ public class TestFabricClient implements ClientModInitializer {
 
         ScreenRegistry.register(ModScreenHandlers.TRANSPORT_COMBINER_SCREEN_HANDLER, TransportCombinerScreen::new);
 
-        ClientPlayNetworking.registerGlobalReceiver(TransportPipeEntity.TRANSPORT_ENTITY_PACKET_ID, ((client, handler, buf, responseSender) -> {
+        ClientPlayNetworking.registerGlobalReceiver(TransportPipeBlockEntity.TRANSPORT_ENTITY_PACKET_ID, ((client, handler, buf, responseSender) -> {
             ItemStack stack = buf.readItemStack();
             BlockPos pos = buf.readBlockPos();
-            Direction from = TransportPipeEntity.PacketReadDirection(buf);
-            Direction to = TransportPipeEntity.PacketReadDirection(buf);
+            Direction from = TransportPipeBlockEntity.PacketReadDirection(buf);
+            Direction to = TransportPipeBlockEntity.PacketReadDirection(buf);
 
-            TransportPipeEntity entity = (TransportPipeEntity) handler.getWorld().getBlockEntity(pos);
+            TransportPipeBlockEntity entity = (TransportPipeBlockEntity) handler.getWorld().getBlockEntity(pos);
             if (entity == null) return;
             entity.setDisplay(stack);
             entity.from = from;

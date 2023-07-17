@@ -1,6 +1,7 @@
 package com.nickyyy.testfabric;
 
 import com.nickyyy.testfabric.block.ModBlocks;
+import com.nickyyy.testfabric.block.TransportPipeBlock;
 import com.nickyyy.testfabric.entity.ModEntities;
 import com.nickyyy.testfabric.item.ModItemGroup;
 import com.nickyyy.testfabric.item.ModItems;
@@ -15,6 +16,10 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+
+import java.util.ArrayList;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 public class ModMain implements ModInitializer {
@@ -54,12 +59,15 @@ public class ModMain implements ModInitializer {
             context.add(ModItems.TRANSPORT_PIPE);
             context.add(ModItems.DISPLAY_BLOCK);
             context.add(ModItems.TRANSPORT_COMBINER);
+            context.add(ModItems.PIPE_FILTER);
             context.add(ModItems.STEEL_MATERIAL);
             context.add(ModItems.STEEL_HELMET);
             context.add(ModItems.STEEL_CHESTPLATE);
             context.add(ModItems.STEEL_LEGGINGS);
             context.add(ModItems.STEEL_BOOTS);
         });
+
+        TransportPipeBlock.SIMILAR_BLOCK_SET.addAll(Stream.of(ModBlocks.TRANSPORT_PIPE_BLOCK, ModBlocks.TRANSPORT_COMBINER_BLOCK, ModBlocks.PIPE_FILTER_BLOCK).collect(Collectors.toCollection(ArrayList::new)));
     }
 
     public void registerItems() {
@@ -71,6 +79,7 @@ public class ModMain implements ModInitializer {
         Registry.register(Registries.ITEM, new Identifier("testfabric", "transport_pipe"), ModItems.TRANSPORT_PIPE);
         Registry.register(Registries.ITEM, new Identifier("testfabric", "transport_combiner"), ModItems.TRANSPORT_COMBINER);
         Registry.register(Registries.ITEM, new Identifier("testfabric", "display_block"), ModItems.DISPLAY_BLOCK);
+        Registry.register(Registries.ITEM, new Identifier("testfabric", "pipe_filter"), ModItems.PIPE_FILTER);
 
         Registry.register(Registries.ITEM, new Identifier("testfabric", "steel_ingot"), ModItems.STEEL_MATERIAL);
         Registry.register(Registries.ITEM, new Identifier("testfabric", "steel_helmet"), ModItems.STEEL_HELMET);
@@ -86,6 +95,7 @@ public class ModMain implements ModInitializer {
         Registry.register(Registries.BLOCK, new Identifier("testfabric", "transport_pipe"), ModBlocks.TRANSPORT_PIPE_BLOCK);
         Registry.register(Registries.BLOCK, new Identifier("testfabric", "transport_combiner"), ModBlocks.TRANSPORT_COMBINER_BLOCK);
         Registry.register(Registries.BLOCK, new Identifier("testfabric", "display_block"), ModBlocks.DISPLAY_BLOCK);
+        Registry.register(Registries.BLOCK, new Identifier("testfabric", "pipe_filter"), ModBlocks.PIPE_FILTER_BLOCK);
     }
 
     public void registerEntities() {
@@ -97,5 +107,7 @@ public class ModMain implements ModInitializer {
                 ModEntities.TRANSPORT_PIPE_ENTITY);
         Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier("testfabric", "transport_combiner_entity"),
                 ModEntities.TRANSPORT_COMBINER_BLOCK_ENTITY);
+        Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier("testfabric", "pipe_filter"),
+                ModEntities.PIPE_FILTER_ENTITY);
     }
 }

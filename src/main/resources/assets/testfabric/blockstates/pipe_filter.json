@@ -1,0 +1,33 @@
+{
+  "variants": {
+    "filter_shape=0": {
+      "model": "testfabric:block/pipe_filter"
+    },
+    "filter_shape=1": {
+      "model": "testfabric:block/pipe_filter_nsd"
+    },
+    "filter_shape=2": {
+      "model": "testfabric:block/pipe_filter",
+      "y": 180
+    },
+    "filter_shape=3": {
+      "model": "testfabric:block/pipe_filter_nsd",
+      "x": 180
+    },
+    "filter_shape=4": {
+      "model": "testfabric:block/pipe_filter_wes",
+      "x": 180
+    },
+    "filter_shape=5": {
+      "model": "testfabric:block/pipe_filter_nsd",
+      "y": 90
+    },
+    "filter_shape=6": {
+      "model": "testfabric:block/pipe_filter_wes"
+    },
+    "filter_shape=7": {
+      "model": "testfabric:block/pipe_filter",
+      "x": 90
+    }
+  }
+}

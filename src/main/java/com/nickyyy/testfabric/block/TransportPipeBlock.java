@@ -1,13 +1,12 @@
 package com.nickyyy.testfabric.block;
 
 import com.nickyyy.testfabric.entity.ModEntities;
-import com.nickyyy.testfabric.entity.TransportPipeEntity;
+import com.nickyyy.testfabric.entity.TransportPipeBlockEntity;
 import com.nickyyy.testfabric.util.ModLog;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.client.render.RenderLayer;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.pathing.NavigationType;
 import net.minecraft.entity.player.PlayerEntity;
@@ -21,7 +20,6 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Position;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
@@ -36,7 +34,7 @@ import java.util.stream.Stream;
 
 public class TransportPipeBlock extends BlockWithEntity {
 
-    public static final HashSet<Block> SIMILAR_BLOCK_SET = Stream.of(ModBlocks.TRANSPORT_PIPE_BLOCK, ModBlocks.TRANSPORT_COMBINER_BLOCK).collect(Collectors.toCollection(HashSet::new));
+    public static final ArrayList<Block> SIMILAR_BLOCK_SET = new ArrayList<>();
 
     public static final VoxelShape BASIC_SHAPE = VoxelShapes.cuboid(0.25f, 0.25f, 0.25f, 0.75f, 0.75f, 0.75f);
 
@@ -65,6 +63,13 @@ public class TransportPipeBlock extends BlockWithEntity {
     public static final VoxelShape CORNER_DOWN_EAST_SHAPE = VoxelShapes.union(HALFCONN_DOWN_SHAPE, HALFCONN_EAST_SHAPE);
 
     public static final IntProperty PIPE_SHAPE = IntProperty.of("pipe_shape", 0, 21);
+
+    public static boolean similarWith(Block block) {
+        for (Block b : SIMILAR_BLOCK_SET) {
+            if (block == b) return true;
+        }
+        return false;
+    }
 
     public TransportPipeBlock(Settings settings) {
         super(settings);
@@ -177,10 +182,8 @@ public class TransportPipeBlock extends BlockWithEntity {
     public int getModel(World world, BlockPos pos, Block block) {
         ArrayList<Direction> directions = getAroundSameBlocks(world, pos, this);
         if (directions.size() == 0) {
-            ModLog.LOGGER.info("Block Have no around blocks");
             return 0;
         } else if (directions.size() == 1) {
-            ModLog.LOGGER.info("Block Have 1 around blocks");
             Direction dir = directions.get(0);
             return switch (dir) {
                 case NORTH -> 1;
@@ -193,7 +196,6 @@ public class TransportPipeBlock extends BlockWithEntity {
         } else {
             Direction dir1 = directions.get(0), dir2 = directions.get(1);
             if (isOpposite(dir1, dir2)) {
-                ModLog.LOGGER.info("2 block is opposite");
                 if (dir1 == Direction.NORTH || dir2 == Direction.NORTH) {
                     return 7;
                 } else if (dir1 == Direction.EAST || dir2 == Direction.EAST) {
@@ -204,7 +206,6 @@ public class TransportPipeBlock extends BlockWithEntity {
             } else {
                 return directionMatch(dir1, dir2);
             }
-            ModLog.LOGGER.info("Block Have " + directions.size() + " around blocks");
             return 0;
         }
     }
@@ -212,10 +213,10 @@ public class TransportPipeBlock extends BlockWithEntity {
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         if (!world.isClient()) {
-            TransportPipeEntity blockEntity = (TransportPipeEntity) world.getBlockEntity(pos);
+            TransportPipeBlockEntity blockEntity = (TransportPipeBlockEntity) world.getBlockEntity(pos);
 
-            if (TransportPipeEntity.debugEntity == blockEntity) TransportPipeEntity.debugEntity = null;
-            else TransportPipeEntity.debugEntity = blockEntity;
+            if (TransportPipeBlockEntity.debugEntity == blockEntity) TransportPipeBlockEntity.debugEntity = null;
+            else TransportPipeBlockEntity.debugEntity = blockEntity;
             player.sendMessage(Text.of("实体是否找到传送源: " + (blockEntity.findTransferDirection ? "找到了" : "没找到 " + "from: "
                     + (blockEntity.from == null ? "null " : blockEntity.from.toString()) + "to: "
                     + (blockEntity.to == null ? "null" : blockEntity.to.toString()))));
@@ -228,10 +229,8 @@ public class TransportPipeBlock extends BlockWithEntity {
         ArrayList<Direction> directions = getAroundSameBlocks(world, pos, this);
 
         if (directions.size() == 0) {
-            ModLog.LOGGER.info("Block Have no around blocks");
             return 0;
         } else if (directions.size() == 1) {
-            ModLog.LOGGER.info("Block Have 1 around blocks");
             Direction dir = directions.get(0);
             return switch (dir) {
                 case NORTH -> 1;
@@ -244,7 +243,6 @@ public class TransportPipeBlock extends BlockWithEntity {
         } else {
             Direction dir1 = directions.get(0), dir2 = directions.get(1);
             if (isOpposite(dir1, dir2)) {
-                ModLog.LOGGER.info("2 block is opposite");
                 if (dir1 == Direction.NORTH || dir2 == Direction.NORTH) {
                     return 7;
                 } else if (dir1 == Direction.EAST || dir2 == Direction.EAST) {
@@ -255,7 +253,6 @@ public class TransportPipeBlock extends BlockWithEntity {
             } else {
                 return directionMatch(dir1, dir2);
             }
-            ModLog.LOGGER.info("Block Have " + directions.size() + " around blocks");
             return 0;
         }
     }
@@ -300,17 +297,17 @@ public class TransportPipeBlock extends BlockWithEntity {
         ArrayList<Direction> directions = new ArrayList<>();
 
         Block north_block = world.getBlockState(pos.north()).getBlock();
-        if (north_block == block || ModBlocks.TRANSPORT_COMBINER_BLOCK == north_block) directions.add(Direction.NORTH);
+        if (similarWith(north_block)) directions.add(Direction.NORTH);
         Block west_block = world.getBlockState(pos.west()).getBlock();
-        if (west_block == block || ModBlocks.TRANSPORT_COMBINER_BLOCK == west_block) directions.add(Direction.WEST);
+        if (similarWith(west_block)) directions.add(Direction.WEST);
         Block south_block = world.getBlockState(pos.south()).getBlock();
-        if (south_block == block || ModBlocks.TRANSPORT_COMBINER_BLOCK == south_block) directions.add(Direction.SOUTH);
+        if (similarWith(south_block)) directions.add(Direction.SOUTH);
         Block east_block = world.getBlockState(pos.east()).getBlock();
-        if (east_block == block || ModBlocks.TRANSPORT_COMBINER_BLOCK == east_block) directions.add(Direction.EAST);
+        if (similarWith(east_block)) directions.add(Direction.EAST);
         Block up_block = world.getBlockState(pos.up()).getBlock();
-        if (up_block == block || ModBlocks.TRANSPORT_COMBINER_BLOCK == up_block) directions.add(Direction.UP);
+        if (similarWith(up_block)) directions.add(Direction.UP);
         Block down_block = world.getBlockState(pos.down()).getBlock();
-        if (down_block == block || ModBlocks.TRANSPORT_COMBINER_BLOCK == down_block) directions.add(Direction.DOWN);
+        if (similarWith(down_block)) directions.add(Direction.DOWN);
 
         return directions;
     }
@@ -319,17 +316,17 @@ public class TransportPipeBlock extends BlockWithEntity {
         ArrayList<Direction> directions = new ArrayList<>();
 
         Block north_block = world.getBlockState(pos.north()).getBlock();
-        if (north_block == block || ModBlocks.TRANSPORT_COMBINER_BLOCK == north_block) directions.add(Direction.NORTH);
+        if (similarWith(north_block)) directions.add(Direction.NORTH);
         Block west_block = world.getBlockState(pos.west()).getBlock();
-        if (west_block == block || ModBlocks.TRANSPORT_COMBINER_BLOCK == west_block) directions.add(Direction.WEST);
+        if (similarWith(west_block)) directions.add(Direction.WEST);
         Block south_block = world.getBlockState(pos.south()).getBlock();
-        if (south_block == block || ModBlocks.TRANSPORT_COMBINER_BLOCK == south_block) directions.add(Direction.SOUTH);
+        if (similarWith(south_block)) directions.add(Direction.SOUTH);
         Block east_block = world.getBlockState(pos.east()).getBlock();
-        if (east_block == block || ModBlocks.TRANSPORT_COMBINER_BLOCK == east_block) directions.add(Direction.EAST);
+        if (similarWith(east_block)) directions.add(Direction.EAST);
         Block up_block = world.getBlockState(pos.up()).getBlock();
-        if (up_block == block || ModBlocks.TRANSPORT_COMBINER_BLOCK == up_block) directions.add(Direction.UP);
+        if (similarWith(up_block)) directions.add(Direction.UP);
         Block down_block = world.getBlockState(pos.down()).getBlock();
-        if (down_block == block || ModBlocks.TRANSPORT_COMBINER_BLOCK == down_block) directions.add(Direction.DOWN);
+        if (similarWith(down_block)) directions.add(Direction.DOWN);
 
         return directions;
     }
@@ -341,7 +338,7 @@ public class TransportPipeBlock extends BlockWithEntity {
     @Nullable
     @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new TransportPipeEntity(pos, state);
+        return new TransportPipeBlockEntity(pos, state);
     }
 
     @Override
@@ -353,7 +350,7 @@ public class TransportPipeBlock extends BlockWithEntity {
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
         if (!world.isClient())
-            return checkType(type, ModEntities.TRANSPORT_PIPE_ENTITY, TransportPipeEntity::server_tick);
-        return checkType(type, ModEntities.TRANSPORT_PIPE_ENTITY, TransportPipeEntity::client_tick);
+            return checkType(type, ModEntities.TRANSPORT_PIPE_ENTITY, TransportPipeBlockEntity::server_tick);
+        return checkType(type, ModEntities.TRANSPORT_PIPE_ENTITY, TransportPipeBlockEntity::client_tick);
     }
 }

@@ -485,6 +485,14 @@ public class TransportPipeBlockEntity extends LootableContainerBlockEntity imple
                     return;
                 }
 //                ModLog.LOGGER.info("该管道无法传输");
+            } else if (world.getBlockEntity(newPos) instanceof PipeFilterBlockEntity) {
+                PipeFilterBlockEntity entity = ((PipeFilterBlockEntity) world.getBlockEntity(newPos));
+                if (entity.findTransferDirection && entity.to.getOpposite() == pair.var1) {
+                    findTransferDirection = true;
+                    from = pair.var1;
+                    to = pair.var2;
+                    return;
+                }
             } else if (world.getBlockEntity(newPos) instanceof TransportCombinerBlockEntity) {
 //                ModLog.LOGGER.info("找到合流器");
                 TransportCombinerBlockEntity entity = (TransportCombinerBlockEntity) world.getBlockEntity(newPos);
@@ -508,7 +516,15 @@ public class TransportPipeBlockEntity extends LootableContainerBlockEntity imple
                     return;
                 }
 //                ModLog.LOGGER.info("方向2未找到上一个管道");
-            } else if (world.getBlockEntity(newPos) instanceof TransportCombinerBlockEntity) {
+            }else if (world.getBlockEntity(newPos) instanceof PipeFilterBlockEntity) {
+                PipeFilterBlockEntity entity = ((PipeFilterBlockEntity) world.getBlockEntity(newPos));
+                if (entity.findTransferDirection && entity.to.getOpposite() == pair.var2) {
+                    findTransferDirection = true;
+                    from = pair.var2;
+                    to = pair.var1;
+                    return;
+                }
+            }  else if (world.getBlockEntity(newPos) instanceof TransportCombinerBlockEntity) {
                 TransportCombinerBlockEntity entity = (TransportCombinerBlockEntity) world.getBlockEntity(newPos);
                 BlockState state1 = world.getBlockState(newPos);
                 if (TransportCombinerBlock.getDirectionByState(state1.get(TransportCombinerBlock.FACING)) == pair.var2) {

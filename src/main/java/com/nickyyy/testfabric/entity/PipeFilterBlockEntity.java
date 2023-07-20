@@ -3,6 +3,7 @@ package com.nickyyy.testfabric.entity;
 import com.nickyyy.testfabric.block.PipeFilterBlock;
 import com.nickyyy.testfabric.block.TransportCombinerBlock;
 import com.nickyyy.testfabric.screen.PipeFilterScreenHandler;
+import com.nickyyy.testfabric.util.ModLog;
 import com.nickyyy.testfabric.util.Pair;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
@@ -27,6 +28,8 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.function.BooleanSupplier;
 import java.util.stream.IntStream;
@@ -106,20 +109,46 @@ public class PipeFilterBlockEntity extends LootableContainerBlockEntity implemen
 
     @Override
     public int[] getAvailableSlots(Direction side) {
-        int[] result = new int[getItems().size() - 6];
-        for (int i = 0; i < result.length; i++) {
-//            ItemStack itemStack = items.get(i);
-//            boolean isFiltered = false;
-//            Item item = itemStack.getItem();
-//            for (int filterItem = 9 ; filterItem < items.size() ; ++filterItem) {
-//                if (items.get(filterItem) == itemStack) {
-//
-//                }
-//            }
-            result[i] = i;
+//        int[] result = new int[];
+        if (side == from) {
+            int[] ret = new int[9];
+            for (int i = 0 ; i < ret.length ; i++) {
+                ret[i] = i;
+            }
+            return ret;
         }
-        return result;
+        ArrayList<Integer> result = new ArrayList<>();
+        for (int i = 0; i < 9; i++) {
+            ItemStack itemStack = items.get(i);
+            if (itemStack.isEmpty()) continue;
+            boolean isFiltered = false;
+            for (int filterItem = 9 ; filterItem < items.size() ; ++filterItem) {
+                if (items.get(filterItem) == ItemStack.EMPTY) continue;
+                if (items.get(filterItem).isOf(itemStack.getItem())) {
+                    isFiltered = true;
+                    break;
+                }
+            }
+            if (side == to) {
+                if (isFiltered) {
+                    result.add(i);
+                    ModLog.LOGGER.info("Filtered Item: " + itemStack.toString());
+                }
+            } else if (side == otherTo) {
+                if (!isFiltered) {
+                    result.add(i);
+                }
+            }
+
+        }
+        int[] arr = new int[result.size()];
+        for (int i = 0 ; i < arr.length ; i++) {
+            arr[i] = result.get(i);
+        }
+        return arr;
     }
+
+
 
     @Override
     public boolean canInsert(int slot, ItemStack stack, @Nullable Direction dir) {
@@ -146,8 +175,11 @@ public class PipeFilterBlockEntity extends LootableContainerBlockEntity implemen
             return false;
         }
 
+        //如果冷却为0
         if (!blockEntity.needsCooling()) {
             boolean bl = false;
+
+            //如果方块实体3x3格子不为空, 进行插入
             if (!blockEntity.isEmpty()) {
                 bl = insert(world, pos, state, blockEntity);
             }
@@ -161,6 +193,14 @@ public class PipeFilterBlockEntity extends LootableContainerBlockEntity implemen
             }
         }
         return false;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        for (int i = 0 ; i < items.size() - 6 ; i++) {
+            if (!items.get(i).isEmpty()) return false;
+        }
+        return true;
     }
 
     private static boolean extract(World world, PipeFilterBlockEntity entity) {
@@ -188,17 +228,56 @@ public class PipeFilterBlockEntity extends LootableContainerBlockEntity implemen
     }
 
     private static boolean insert(World world, BlockPos pos, BlockState state, Inventory inventory) {
+        //获取输出口的容器
         Inventory inventory2 = getOutputInventory(world, pos, state);
         if (inventory2 == null) {
             return false;
         }
 
-        Direction direction = ((PipeFilterBlockEntity) Objects.requireNonNull(world.getBlockEntity(pos))).to.getOpposite();
+        //获取当前方块实体的目标方向的反方向
+        PipeFilterBlockEntity entity = (PipeFilterBlockEntity) Objects.requireNonNull(world.getBlockEntity(pos));
+        Direction direction = entity.to.getOpposite();
+        //目标容器的可用slot是否为满,若满了则代表无法插入
         if (isInventoryFull(inventory2, direction)) {
             return false;
         }
 
-        for (int i = 0 ; i < inventory.size() ; i++) {
+        int[] slots = entity.getAvailableSlots(entity.to);
+        ModLog.LOGGER.info("可用槽数量为:" + slots.length);
+        boolean ret = false;
+
+        for (int i = 0 ; i < slots.length ; i++) {
+            if (inventory.getStack(i).isEmpty()) continue;
+            ItemStack stack1 = inventory.getStack(i).copy();
+            ItemStack stack2 = transfer(inventory, inventory2, inventory.removeStack(i, 1), direction);
+            if (stack2.isEmpty()) {
+                inventory2.markDirty();
+                ret = true;
+                break;
+            }
+            inventory.setStack(i, stack1);
+        }
+
+        Inventory inventory3 = getOtherOutputInventory(world, pos, state);
+        if (inventory3 == null) {
+            ModLog.LOGGER.warn("其他口为空");
+            return ret;
+        }
+
+        int[] slots2 = entity.getAvailableSlots(entity.otherTo);
+        for (int i = 0 ; i < slots2.length ; i++) {
+            if (inventory.getStack(i).isEmpty()) continue;
+            ItemStack stack1 = inventory.getStack(i).copy();
+            ItemStack stack2 = transfer(inventory, inventory3, inventory.removeStack(i, 1), direction);
+            if (stack2.isEmpty()) {
+                inventory3.markDirty();
+                ret |= true;
+                break;
+            }
+            inventory.setStack(i, stack1);
+        }
+
+        /*for (int i = 0 ; i < inventory.size() ; i++) {
             if (inventory.getStack(i).isEmpty()) continue;
             ItemStack stack1 = inventory.getStack(i).copy();
             ItemStack stack2 = transfer(inventory, inventory2, inventory.removeStack(i, 1), direction);
@@ -207,8 +286,9 @@ public class PipeFilterBlockEntity extends LootableContainerBlockEntity implemen
                 return true;
             }
             inventory.setStack(i, stack1);
-        }
-        return false;
+        }*/
+
+        return ret;
     }
 
     public static ItemStack transfer(@Nullable Inventory from, Inventory to, ItemStack stack, @Nullable Direction side) {
@@ -330,10 +410,24 @@ public class PipeFilterBlockEntity extends LootableContainerBlockEntity implemen
         this.cooling = cooling;
     }
 
+    /**
+     * @details 获取方块过滤口输出的容器
+     * @param world
+     * @param pos
+     * @param state
+     * @return
+     */
     private static Inventory getOutputInventory(World world, BlockPos pos, BlockState state) {
         return TransportPipeBlockEntity.getInventoryByDirection(world, pos, ((PipeFilterBlockEntity) world.getBlockEntity(pos)).to);
     }
 
+    /**
+     * @details 获取方块其他口输出的容器
+     * @param world
+     * @param pos
+     * @param state
+     * @return
+     */
     private static Inventory getOtherOutputInventory(World world, BlockPos pos, BlockState state) {
         return TransportPipeBlockEntity.getInventoryByDirection(world, pos, ((PipeFilterBlockEntity) world.getBlockEntity(pos)).otherTo);
     }

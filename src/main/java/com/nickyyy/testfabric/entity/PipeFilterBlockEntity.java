@@ -132,7 +132,7 @@ public class PipeFilterBlockEntity extends LootableContainerBlockEntity implemen
             if (side == to) {
                 if (isFiltered) {
                     result.add(i);
-                    ModLog.LOGGER.info("Filtered Item: " + itemStack.toString());
+//                    ModLog.LOGGER.info("Filtered Item: " + itemStack.toString());
                 }
             } else if (side == otherTo) {
                 if (!isFiltered) {
@@ -179,7 +179,7 @@ public class PipeFilterBlockEntity extends LootableContainerBlockEntity implemen
         if (!blockEntity.needsCooling()) {
             boolean bl = false;
 
-            //如果方块实体3x3格子不为空, 进行插入
+            //如果方块实体3x3格子不为空, 对输出口进行插入
             if (!blockEntity.isEmpty()) {
                 bl = insert(world, pos, state, blockEntity);
             }
@@ -243,7 +243,7 @@ public class PipeFilterBlockEntity extends LootableContainerBlockEntity implemen
         }
 
         int[] slots = entity.getAvailableSlots(entity.to);
-        ModLog.LOGGER.info("可用槽数量为:" + slots.length);
+//        ModLog.LOGGER.info("可用槽数量为:" + slots.length);
         boolean ret = false;
 
         for (int i = 0 ; i < slots.length ; i++) {
@@ -260,15 +260,16 @@ public class PipeFilterBlockEntity extends LootableContainerBlockEntity implemen
 
         Inventory inventory3 = getOtherOutputInventory(world, pos, state);
         if (inventory3 == null) {
-            ModLog.LOGGER.warn("其他口为空");
+//            ModLog.LOGGER.warn("其他口为空");
             return ret;
         }
 
         int[] slots2 = entity.getAvailableSlots(entity.otherTo);
+        Direction direction1 = entity.otherTo;
         for (int i = 0 ; i < slots2.length ; i++) {
             if (inventory.getStack(i).isEmpty()) continue;
             ItemStack stack1 = inventory.getStack(i).copy();
-            ItemStack stack2 = transfer(inventory, inventory3, inventory.removeStack(i, 1), direction);
+            ItemStack stack2 = transfer(inventory, inventory3, inventory.removeStack(i, 1), direction1);
             if (stack2.isEmpty()) {
                 inventory3.markDirty();
                 ret |= true;

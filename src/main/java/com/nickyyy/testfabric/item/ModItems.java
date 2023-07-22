@@ -30,4 +30,15 @@ public class ModItems {
     public static final Item STEEL_CHESTPLATE = new ArmorItem(STEEL_ARMOR_MATERIAL, ArmorItem.Type.CHESTPLATE, new Item.Settings().maxCount(1));
     public static final Item STEEL_LEGGINGS = new ArmorItem(STEEL_ARMOR_MATERIAL, ArmorItem.Type.LEGGINGS, new Item.Settings().maxCount(1));
     public static final Item STEEL_BOOTS = new ArmorItem(STEEL_ARMOR_MATERIAL, ArmorItem.Type.BOOTS, new Item.Settings().maxCount(1));
+
+    public static final Item SILVER_ORE = new BlockItem(ModBlocks.SILVER_ORE, new FabricItemSettings().maxCount(64));
+    public static final Item TIN_ORE = new BlockItem(ModBlocks.TIN_ORE, new FabricItemSettings().maxCount(64));
+    public static final Item LITHIUM_ORE = new BlockItem(ModBlocks.LITHIUM_ORE, new FabricItemSettings().maxCount(64));
+    public static final Item TITANIUM_ORE = new BlockItem(ModBlocks.TITANIUM_ORE, new FabricItemSettings().maxCount(64));
+    public static final Item LEAD_ORE = new BlockItem(ModBlocks.LEAD_ORE, new FabricItemSettings().maxCount(64));
+    public static final Item ALUMINIUM_ORE = new BlockItem(ModBlocks.ALUMINIUM_ORE, new FabricItemSettings().maxCount(64));
+    public static final Item URANIUM_ORE = new BlockItem(ModBlocks.URANIUM_ORE, new FabricItemSettings().maxCount(64));
+    public static final Item PHOSPHORUS_ORE = new BlockItem(ModBlocks.PHOSPHORUS_ORE, new FabricItemSettings().maxCount(64));
+    public static final Item SULFUR_ORE = new BlockItem(ModBlocks.SULFUR_ORE, new FabricItemSettings().maxCount(64));
+    public static final Item RARE_EARTH_ORE = new BlockItem(ModBlocks.RARE_EARTH_ORE, new FabricItemSettings().maxCount(64));
 }

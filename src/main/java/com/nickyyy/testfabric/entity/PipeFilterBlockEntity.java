@@ -132,7 +132,7 @@ public class PipeFilterBlockEntity extends LootableContainerBlockEntity implemen
             if (side == to) {
                 if (isFiltered) {
                     result.add(i);
-                    ModLog.LOGGER.info("Filtered Item: " + itemStack.toString());
+//                    ModLog.LOGGER.info("Filtered Item: " + itemStack.toString());
                 }
             } else if (side == otherTo) {
                 if (!isFiltered) {
@@ -243,13 +243,13 @@ public class PipeFilterBlockEntity extends LootableContainerBlockEntity implemen
         }
 
         int[] slots = entity.getAvailableSlots(entity.to);
-        ModLog.LOGGER.info("可用槽数量为:" + slots.length);
+//        ModLog.LOGGER.info("可用槽数量为:" + slots.length);
         boolean ret = false;
 
         for (int i = 0 ; i < slots.length ; i++) {
-            if (inventory.getStack(i).isEmpty()) continue;
-            ItemStack stack1 = inventory.getStack(i).copy();
-            ItemStack stack2 = transfer(inventory, inventory2, inventory.removeStack(i, 1), direction);
+            if (inventory.getStack(slots[i]).isEmpty()) continue;
+            ItemStack stack1 = inventory.getStack(slots[i]).copy();
+            ItemStack stack2 = transfer(inventory, inventory2, inventory.removeStack(slots[i], 1), direction);
             if (stack2.isEmpty()) {
                 inventory2.markDirty();
                 ret = true;
@@ -265,10 +265,13 @@ public class PipeFilterBlockEntity extends LootableContainerBlockEntity implemen
         }
 
         int[] slots2 = entity.getAvailableSlots(entity.otherTo);
+        ModLog.LOGGER.info("其他口可用槽数量为:" + slots2.length);
+        Direction direction1 = entity.otherTo.getOpposite();
         for (int i = 0 ; i < slots2.length ; i++) {
-            if (inventory.getStack(i).isEmpty()) continue;
-            ItemStack stack1 = inventory.getStack(i).copy();
-            ItemStack stack2 = transfer(inventory, inventory3, inventory.removeStack(i, 1), direction);
+            ModLog.LOGGER.info("未被过滤 i = " + slots2[i]);
+            if (inventory.getStack(slots2[i]).isEmpty()) continue;
+            ItemStack stack1 = inventory.getStack(slots2[i]).copy();
+            ItemStack stack2 = transfer(inventory, inventory3, inventory.removeStack(slots2[i], 1), direction1);
             if (stack2.isEmpty()) {
                 inventory3.markDirty();
                 ret |= true;

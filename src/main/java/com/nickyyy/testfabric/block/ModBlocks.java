@@ -3,13 +3,12 @@ package com.nickyyy.testfabric.block;
 import com.nickyyy.testfabric.entity.MiningMachineBlockEntity;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
+import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntityType;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
-import net.minecraft.block.MapColor;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.block.enums.Instrument;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.sound.BlockSoundGroup;
@@ -22,4 +21,25 @@ public class ModBlocks {
     public static final DisplayBlock DISPLAY_BLOCK = new DisplayBlock(FabricBlockSettings.create().hardness(4.0f));
     public static final TransportCombinerBlock TRANSPORT_COMBINER_BLOCK = new TransportCombinerBlock(FabricBlockSettings.create().hardness(4.0f));
     public static final PipeFilterBlock PIPE_FILTER_BLOCK = new PipeFilterBlock(FabricBlockSettings.create().hardness(4.0f));
+    //银矿
+    public static final Block SILVER_ORE = new ExperienceDroppingBlock(AbstractBlock.Settings.create().mapColor(MapColor.BLUE).instrument(Instrument.BASEDRUM).requiresTool().strength(3.0f, 3.0f));
+    //锡矿
+    public static final Block TIN_ORE = new ExperienceDroppingBlock(AbstractBlock.Settings.create().mapColor(MapColor.GRAY).instrument(Instrument.BASEDRUM).requiresTool().strength(3.0f, 3.0f));
+    //锂矿
+    public static final Block LITHIUM_ORE = new ExperienceDroppingBlock(AbstractBlock.Settings.create().mapColor(MapColor.GRAY).instrument(Instrument.BASEDRUM).requiresTool().strength(3.0f, 3.0f));
+    //钛矿
+    public static final Block TITANIUM_ORE = new ExperienceDroppingBlock(AbstractBlock.Settings.create().mapColor(MapColor.GRAY).instrument(Instrument.BASEDRUM).requiresTool().strength(3.0f, 3.0f));
+    //铅矿
+    public static final Block LEAD_ORE = new ExperienceDroppingBlock(AbstractBlock.Settings.create().mapColor(MapColor.GRAY).instrument(Instrument.BASEDRUM).requiresTool().strength(4.5f, 4.5f));
+    //铝矿
+    public static final Block ALUMINIUM_ORE = new ExperienceDroppingBlock(AbstractBlock.Settings.create().mapColor(MapColor.GRAY).instrument(Instrument.BASEDRUM).requiresTool().strength(3.0f, 3.0f));
+    //铀矿
+    public static final Block URANIUM_ORE = new ExperienceDroppingBlock(AbstractBlock.Settings.create().mapColor(MapColor.GRAY).instrument(Instrument.BASEDRUM).requiresTool().strength(3.0f, 3.0f));
+    //磷矿
+    public static final Block PHOSPHORUS_ORE = new ExperienceDroppingBlock(AbstractBlock.Settings.create().mapColor(MapColor.GRAY).instrument(Instrument.BASEDRUM).requiresTool().strength(3.0f, 3.0f));
+    //硫矿
+    public static final Block SULFUR_ORE = new ExperienceDroppingBlock(AbstractBlock.Settings.create().mapColor(MapColor.GRAY).instrument(Instrument.BASEDRUM).requiresTool().strength(3.0f, 3.0f));
+    //稀土矿
+    public static final Block RARE_EARTH_ORE = new ExperienceDroppingBlock(AbstractBlock.Settings.create().mapColor(MapColor.GRAY).instrument(Instrument.BASEDRUM).requiresTool().strength(3.0f, 3.0f));
+
 }

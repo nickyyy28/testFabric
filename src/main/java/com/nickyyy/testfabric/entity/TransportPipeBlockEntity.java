@@ -487,7 +487,7 @@ public class TransportPipeBlockEntity extends LootableContainerBlockEntity imple
 //                ModLog.LOGGER.info("该管道无法传输");
             } else if (world.getBlockEntity(newPos) instanceof PipeFilterBlockEntity) {
                 PipeFilterBlockEntity entity = ((PipeFilterBlockEntity) world.getBlockEntity(newPos));
-                if (entity.findTransferDirection && entity.to.getOpposite() == pair.var1) {
+                if (entity.findTransferDirection && (entity.to.getOpposite() == pair.var1 ||  entity.otherTo.getOpposite() == pair.var1)) {
                     findTransferDirection = true;
                     from = pair.var1;
                     to = pair.var2;
@@ -518,7 +518,7 @@ public class TransportPipeBlockEntity extends LootableContainerBlockEntity imple
 //                ModLog.LOGGER.info("方向2未找到上一个管道");
             }else if (world.getBlockEntity(newPos) instanceof PipeFilterBlockEntity) {
                 PipeFilterBlockEntity entity = ((PipeFilterBlockEntity) world.getBlockEntity(newPos));
-                if (entity.findTransferDirection && entity.to.getOpposite() == pair.var2) {
+                if (entity.findTransferDirection && (entity.to.getOpposite() == pair.var2 ||  entity.otherTo.getOpposite() == pair.var2)) {
                     findTransferDirection = true;
                     from = pair.var2;
                     to = pair.var1;

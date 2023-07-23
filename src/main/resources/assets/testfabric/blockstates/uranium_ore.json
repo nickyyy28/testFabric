@@ -1,0 +1,5 @@
+{
+  "variants": {
+    "": { "model": "testfabric:block/uranium_ore" }
+  }
+}

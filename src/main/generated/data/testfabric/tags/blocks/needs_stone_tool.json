@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "testfabric:transport_pipe",
+    "testfabric:pipe_filter",
+    "testfabric:vertical_half_brick"
+  ]
+}

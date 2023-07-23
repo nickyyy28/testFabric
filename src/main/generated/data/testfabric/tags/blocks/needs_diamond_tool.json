@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "testfabric:titanium_ore",
+    "testfabric:lead_ore",
+    "testfabric:uranium_ore",
+    "testfabric:rare_earth_ore"
+  ]
+}

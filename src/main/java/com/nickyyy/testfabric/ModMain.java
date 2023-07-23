@@ -10,6 +10,7 @@ import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.fabricmc.fabric.api.registry.CompostingChanceRegistry;
+import net.minecraft.block.Blocks;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.item.*;
 import net.minecraft.registry.Registries;
@@ -65,7 +66,18 @@ public class ModMain implements ModInitializer {
             context.add(ModItems.STEEL_CHESTPLATE);
             context.add(ModItems.STEEL_LEGGINGS);
             context.add(ModItems.STEEL_BOOTS);
+            context.add(ModItems.SILVER_ORE);
+            context.add(ModItems.TIN_ORE);
+            context.add(ModItems.LITHIUM_ORE);
+            context.add(ModItems.TITANIUM_ORE);
+            context.add(ModItems.LEAD_ORE);
+            context.add(ModItems.ALUMINIUM_ORE);
+            context.add(ModItems.URANIUM_ORE);
+            context.add(ModItems.PHOSPHORUS_ORE);
+            context.add(ModItems.SULFUR_ORE);
+            context.add(ModItems.RARE_EARTH_ORE);
         });
+
 
         TransportPipeBlock.SIMILAR_BLOCK_SET.addAll(Stream.of(ModBlocks.TRANSPORT_PIPE_BLOCK, ModBlocks.TRANSPORT_COMBINER_BLOCK, ModBlocks.PIPE_FILTER_BLOCK).collect(Collectors.toCollection(ArrayList::new)));
     }
@@ -86,6 +98,17 @@ public class ModMain implements ModInitializer {
         Registry.register(Registries.ITEM, new Identifier("testfabric", "steel_chestplate"), ModItems.STEEL_CHESTPLATE);
         Registry.register(Registries.ITEM, new Identifier("testfabric", "steel_leggings"), ModItems.STEEL_LEGGINGS);
         Registry.register(Registries.ITEM, new Identifier("testfabric", "steel_boots"), ModItems.STEEL_BOOTS);
+
+        Registry.register(Registries.ITEM, new Identifier("testfabric", "silver_ore"), ModItems.SILVER_ORE);
+        Registry.register(Registries.ITEM, new Identifier("testfabric", "tin_ore"), ModItems.TIN_ORE);
+        Registry.register(Registries.ITEM, new Identifier("testfabric", "lithium_ore"), ModItems.LITHIUM_ORE);
+        Registry.register(Registries.ITEM, new Identifier("testfabric", "titanium_ore"), ModItems.TITANIUM_ORE);
+        Registry.register(Registries.ITEM, new Identifier("testfabric", "lead_ore"), ModItems.LEAD_ORE);
+        Registry.register(Registries.ITEM, new Identifier("testfabric", "aluminium_ore"), ModItems.ALUMINIUM_ORE);
+        Registry.register(Registries.ITEM, new Identifier("testfabric", "uranium_ore"), ModItems.URANIUM_ORE);
+        Registry.register(Registries.ITEM, new Identifier("testfabric", "phosphorus_ore"), ModItems.PHOSPHORUS_ORE);
+        Registry.register(Registries.ITEM, new Identifier("testfabric", "sulfur_ore"), ModItems.SULFUR_ORE);
+        Registry.register(Registries.ITEM, new Identifier("testfabric", "rare_earth_ore"), ModItems.RARE_EARTH_ORE);
     }
 
     public void registerBlocks() {
@@ -96,6 +119,16 @@ public class ModMain implements ModInitializer {
         Registry.register(Registries.BLOCK, new Identifier("testfabric", "transport_combiner"), ModBlocks.TRANSPORT_COMBINER_BLOCK);
         Registry.register(Registries.BLOCK, new Identifier("testfabric", "display_block"), ModBlocks.DISPLAY_BLOCK);
         Registry.register(Registries.BLOCK, new Identifier("testfabric", "pipe_filter"), ModBlocks.PIPE_FILTER_BLOCK);
+        Registry.register(Registries.BLOCK, new Identifier("testfabric", "silver_ore"), ModBlocks.SILVER_ORE);
+        Registry.register(Registries.BLOCK, new Identifier("testfabric", "tin_ore"), ModBlocks.TIN_ORE);
+        Registry.register(Registries.BLOCK, new Identifier("testfabric", "lithium_ore"), ModBlocks.LITHIUM_ORE);
+        Registry.register(Registries.BLOCK, new Identifier("testfabric", "titanium_ore"), ModBlocks.TITANIUM_ORE);
+        Registry.register(Registries.BLOCK, new Identifier("testfabric", "lead_ore"), ModBlocks.LEAD_ORE);
+        Registry.register(Registries.BLOCK, new Identifier("testfabric", "aluminium_ore"), ModBlocks.ALUMINIUM_ORE);
+        Registry.register(Registries.BLOCK, new Identifier("testfabric", "uranium_ore"), ModBlocks.URANIUM_ORE);
+        Registry.register(Registries.BLOCK, new Identifier("testfabric", "phosphorus_ore"), ModBlocks.PHOSPHORUS_ORE);
+        Registry.register(Registries.BLOCK, new Identifier("testfabric", "sulfur_ore"), ModBlocks.SULFUR_ORE);
+        Registry.register(Registries.BLOCK, new Identifier("testfabric", "rare_earth_ore"), ModBlocks.RARE_EARTH_ORE);
     }
 
     public void registerEntities() {

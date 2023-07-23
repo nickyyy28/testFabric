@@ -1,0 +1,15 @@
+{
+  "replace": false,
+  "values": [
+    "testfabric:lithium_ore",
+    "testfabric:aluminium_ore",
+    "testfabric:phosphorus_ore",
+    "testfabric:tin_ore",
+    "testfabric:silver_ore",
+    "testfabric:sulfur_ore",
+    "testfabric:transport_combiner",
+    "testfabric:display_block",
+    "testfabric:mining_machine",
+    "testfabric:redstone_transform_engine"
+  ]
+}

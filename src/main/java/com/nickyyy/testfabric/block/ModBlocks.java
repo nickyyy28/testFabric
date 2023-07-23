@@ -22,7 +22,7 @@ public class ModBlocks {
     public static final TransportCombinerBlock TRANSPORT_COMBINER_BLOCK = new TransportCombinerBlock(FabricBlockSettings.create().hardness(4.0f));
     public static final PipeFilterBlock PIPE_FILTER_BLOCK = new PipeFilterBlock(FabricBlockSettings.create().hardness(4.0f));
     //银矿
-    public static final Block SILVER_ORE = new ExperienceDroppingBlock(AbstractBlock.Settings.create().mapColor(MapColor.BLUE).instrument(Instrument.BASEDRUM).requiresTool().strength(3.0f, 3.0f));
+    public static final Block SILVER_ORE = new ExperienceDroppingBlock(AbstractBlock.Settings.create().mapColor(MapColor.BLUE).hardness(3.0f).instrument(Instrument.BASEDRUM).requiresTool().strength(2.0f, 2.0f));
     //锡矿
     public static final Block TIN_ORE = new ExperienceDroppingBlock(AbstractBlock.Settings.create().mapColor(MapColor.GRAY).instrument(Instrument.BASEDRUM).requiresTool().strength(3.0f, 3.0f));
     //锂矿
@@ -40,6 +40,6 @@ public class ModBlocks {
     //硫矿
     public static final Block SULFUR_ORE = new ExperienceDroppingBlock(AbstractBlock.Settings.create().mapColor(MapColor.GRAY).instrument(Instrument.BASEDRUM).requiresTool().strength(3.0f, 3.0f));
     //稀土矿
-    public static final Block RARE_EARTH_ORE = new ExperienceDroppingBlock(AbstractBlock.Settings.create().mapColor(MapColor.GRAY).instrument(Instrument.BASEDRUM).requiresTool().strength(3.0f, 3.0f));
+    public static final Block RARE_EARTH_ORE = new ExperienceDroppingBlock(AbstractBlock.Settings.create().mapColor(MapColor.GRAY).instrument(Instrument.BASEDRUM).hardness(3.0f).requiresTool().strength(3.0f, 3.0f));
 
 }

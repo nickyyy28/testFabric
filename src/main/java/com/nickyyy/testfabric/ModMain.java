@@ -10,6 +10,7 @@ import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.fabricmc.fabric.api.registry.CompostingChanceRegistry;
+import net.minecraft.block.Blocks;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.item.*;
 import net.minecraft.registry.Registries;
@@ -76,6 +77,7 @@ public class ModMain implements ModInitializer {
             context.add(ModItems.SULFUR_ORE);
             context.add(ModItems.RARE_EARTH_ORE);
         });
+
 
         TransportPipeBlock.SIMILAR_BLOCK_SET.addAll(Stream.of(ModBlocks.TRANSPORT_PIPE_BLOCK, ModBlocks.TRANSPORT_COMBINER_BLOCK, ModBlocks.PIPE_FILTER_BLOCK).collect(Collectors.toCollection(ArrayList::new)));
     }

@@ -1,0 +1,5 @@
+{
+  "variants": {
+    "": { "model": "testfabric:block/lithium_ore" }
+  }
+}

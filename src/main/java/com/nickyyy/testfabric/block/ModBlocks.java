@@ -14,17 +14,17 @@ import net.minecraft.registry.Registry;
 import net.minecraft.sound.BlockSoundGroup;
 
 public class ModBlocks {
-    public static final RedStoneTransformEngineBlock REDSTONE_TRANSFORM_ENGINE = new RedStoneTransformEngineBlock(FabricBlockSettings.create().hardness(4.0f));
+    public static final RedStoneTransformEngineBlock REDSTONE_TRANSFORM_ENGINE = new RedStoneTransformEngineBlock(FabricBlockSettings.create().hardness(2.0f));
     public static final MiningMachineBlock MINING_MACHINE_BLOCK = new MiningMachineBlock(FabricBlockSettings.copyOf(Blocks.SMOOTH_STONE));
-    public static final VerticalHalfBrickBlock VERTICAL_HALF_BRICK_BLOCK = new VerticalHalfBrickBlock(FabricBlockSettings.create().hardness(3.0f));
-    public static final TransportPipeBlock TRANSPORT_PIPE_BLOCK = new TransportPipeBlock(FabricBlockSettings.create().hardness(4.0f));
-    public static final DisplayBlock DISPLAY_BLOCK = new DisplayBlock(FabricBlockSettings.create().hardness(4.0f));
-    public static final TransportCombinerBlock TRANSPORT_COMBINER_BLOCK = new TransportCombinerBlock(FabricBlockSettings.create().hardness(4.0f));
-    public static final PipeFilterBlock PIPE_FILTER_BLOCK = new PipeFilterBlock(FabricBlockSettings.create().hardness(4.0f));
+    public static final VerticalHalfBrickBlock VERTICAL_HALF_BRICK_BLOCK = new VerticalHalfBrickBlock(FabricBlockSettings.create().hardness(2.0f));
+    public static final TransportPipeBlock TRANSPORT_PIPE_BLOCK = new TransportPipeBlock(FabricBlockSettings.create().hardness(2.0f));
+    public static final DisplayBlock DISPLAY_BLOCK = new DisplayBlock(FabricBlockSettings.create().hardness(2.0f));
+    public static final TransportCombinerBlock TRANSPORT_COMBINER_BLOCK = new TransportCombinerBlock(FabricBlockSettings.create().hardness(2.0f));
+    public static final PipeFilterBlock PIPE_FILTER_BLOCK = new PipeFilterBlock(FabricBlockSettings.create().hardness(2.0f));
     //银矿
-    public static final Block SILVER_ORE = new ExperienceDroppingBlock(AbstractBlock.Settings.create().mapColor(MapColor.BLUE).hardness(3.0f).instrument(Instrument.BASEDRUM).requiresTool().strength(2.0f, 2.0f));
+    public static final Block SILVER_ORE = new ExperienceDroppingBlock(AbstractBlock.Settings.create().mapColor(MapColor.BLUE).hardness(3.0f).instrument(Instrument.BASEDRUM).requiresTool().strength(1.0f, 1.0f));
     //锡矿
-    public static final Block TIN_ORE = new ExperienceDroppingBlock(AbstractBlock.Settings.create().mapColor(MapColor.GRAY).instrument(Instrument.BASEDRUM).requiresTool().strength(3.0f, 3.0f));
+    public static final Block TIN_ORE = new ExperienceDroppingBlock(AbstractBlock.Settings.create().mapColor(MapColor.GRAY).instrument(Instrument.BASEDRUM).requiresTool().strength(1.0f, 1.0f));
     //锂矿
     public static final Block LITHIUM_ORE = new ExperienceDroppingBlock(AbstractBlock.Settings.create().mapColor(MapColor.GRAY).instrument(Instrument.BASEDRUM).requiresTool().strength(3.0f, 3.0f));
     //钛矿

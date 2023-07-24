@@ -22,6 +22,7 @@ import net.minecraft.loot.context.LootContextType;
 import net.minecraft.loot.context.LootContextTypes;
 import net.minecraft.loot.provider.number.ConstantLootNumberProvider;
 import net.minecraft.registry.*;
+import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -99,10 +100,11 @@ public class DataGeneration implements DataGeneratorEntrypoint {
     }
 
     private static class BlockTagProvider extends FabricTagProvider<Block> {
-        public static final TagKey<Block> NEEDS_DIAMOND_BLOCK = TagKey.of(RegistryKeys.BLOCK, new Identifier("testfabric", "needs_diamond_tool"));
+        public static final TagKey<Block> NEEDS_DIAMOND_TOOL = TagKey.of(RegistryKeys.BLOCK, new Identifier("testfabric", "needs_diamond_tool"));
         public static final TagKey<Block> NEEDS_IRON_TOOL = TagKey.of(RegistryKeys.BLOCK, new Identifier("testfabric", "needs_iron_tool"));
         public static final TagKey<Block> NEEDS_STONE_TOOL = TagKey.of(RegistryKeys.BLOCK, new Identifier("testfabric", "needs_stone_tool"));
-//        public static final TagKey<Block> NEEDS_WOOD_TOOL = TagKey.of(RegistryKeys.BLOCK, new Identifier("testfabric", "needs_wood_tool"));
+        public static final TagKey<Block> PICKAXE = TagKey.of(RegistryKeys.BLOCK, new Identifier("testfabric", "mineable/pickaxe"));
+        //        public static final TagKey<Block> NEEDS_WOOD_TOOL = TagKey.of(RegistryKeys.BLOCK, new Identifier("testfabric", "needs_wood_tool"));
 //        public static final TagKey<Block> NEED_LEVEL_0_BLOCK = TagKey.of(RegistryKeys.BLOCK, new Identifier("testfabric", "mineable/needs_tool_level_0"));
 
         /**
@@ -119,7 +121,49 @@ public class DataGeneration implements DataGeneratorEntrypoint {
 
         @Override
         protected void configure(RegistryWrapper.WrapperLookup arg) {
-            getOrCreateTagBuilder(NEEDS_DIAMOND_BLOCK)
+            getOrCreateTagBuilder(BlockTags.NEEDS_DIAMOND_TOOL)
+                    .add(ModBlocks.TITANIUM_ORE)
+                    .add(ModBlocks.LEAD_ORE)
+                    .add(ModBlocks.URANIUM_ORE)
+                    .add(ModBlocks.RARE_EARTH_ORE);
+
+            getOrCreateTagBuilder(BlockTags.NEEDS_IRON_TOOL)
+                    .add(ModBlocks.LITHIUM_ORE)
+                    .add(ModBlocks.ALUMINIUM_ORE)
+                    .add(ModBlocks.PHOSPHORUS_ORE)
+                    .add(ModBlocks.TIN_ORE)
+                    .add(ModBlocks.SILVER_ORE)
+                    .add(ModBlocks.SULFUR_ORE)
+                    .add(ModBlocks.TRANSPORT_COMBINER_BLOCK)
+                    .add(ModBlocks.DISPLAY_BLOCK)
+                    .add(ModBlocks.MINING_MACHINE_BLOCK)
+                    .add(ModBlocks.REDSTONE_TRANSFORM_ENGINE);
+
+            getOrCreateTagBuilder(BlockTags.NEEDS_STONE_TOOL)
+                    .add(ModBlocks.TRANSPORT_PIPE_BLOCK)
+                    .add(ModBlocks.PIPE_FILTER_BLOCK)
+                    .add(ModBlocks.VERTICAL_HALF_BRICK_BLOCK);
+
+            getOrCreateTagBuilder(BlockTags.PICKAXE_MINEABLE)
+                    .add(ModBlocks.TITANIUM_ORE)
+                    .add(ModBlocks.LEAD_ORE)
+                    .add(ModBlocks.URANIUM_ORE)
+                    .add(ModBlocks.RARE_EARTH_ORE)
+                    .add(ModBlocks.LITHIUM_ORE)
+                    .add(ModBlocks.ALUMINIUM_ORE)
+                    .add(ModBlocks.PHOSPHORUS_ORE)
+                    .add(ModBlocks.TIN_ORE)
+                    .add(ModBlocks.SILVER_ORE)
+                    .add(ModBlocks.SULFUR_ORE)
+                    .add(ModBlocks.TRANSPORT_COMBINER_BLOCK)
+                    .add(ModBlocks.DISPLAY_BLOCK)
+                    .add(ModBlocks.MINING_MACHINE_BLOCK)
+                    .add(ModBlocks.REDSTONE_TRANSFORM_ENGINE)
+                    .add(ModBlocks.TRANSPORT_PIPE_BLOCK)
+                    .add(ModBlocks.PIPE_FILTER_BLOCK)
+                    .add(ModBlocks.VERTICAL_HALF_BRICK_BLOCK);
+
+            /*getOrCreateTagBuilder(NEEDS_DIAMOND_TOOL)
                     .add(ModBlocks.TITANIUM_ORE)
                     .add(ModBlocks.LEAD_ORE)
                     .add(ModBlocks.URANIUM_ORE)
@@ -140,7 +184,7 @@ public class DataGeneration implements DataGeneratorEntrypoint {
             getOrCreateTagBuilder(NEEDS_STONE_TOOL)
                     .add(ModBlocks.TRANSPORT_PIPE_BLOCK)
                     .add(ModBlocks.PIPE_FILTER_BLOCK)
-                    .add(ModBlocks.VERTICAL_HALF_BRICK_BLOCK);
+                    .add(ModBlocks.VERTICAL_HALF_BRICK_BLOCK);*/
 
 //            getOrCreateTagBuilder(NEED_LEVEL_1_BLOCK);
 //            getOrCreateTagBuilder(NEED_LEVEL_0_BLOCK);

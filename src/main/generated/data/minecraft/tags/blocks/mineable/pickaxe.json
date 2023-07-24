@@ -1,0 +1,22 @@
+{
+  "replace": false,
+  "values": [
+    "testfabric:titanium_ore",
+    "testfabric:lead_ore",
+    "testfabric:uranium_ore",
+    "testfabric:rare_earth_ore",
+    "testfabric:lithium_ore",
+    "testfabric:aluminium_ore",
+    "testfabric:phosphorus_ore",
+    "testfabric:tin_ore",
+    "testfabric:silver_ore",
+    "testfabric:sulfur_ore",
+    "testfabric:transport_combiner",
+    "testfabric:display_block",
+    "testfabric:mining_machine",
+    "testfabric:redstone_transform_engine",
+    "testfabric:transport_pipe",
+    "testfabric:pipe_filter",
+    "testfabric:vertical_half_brick"
+  ]
+}

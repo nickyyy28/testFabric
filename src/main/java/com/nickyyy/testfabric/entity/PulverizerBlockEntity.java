@@ -18,9 +18,13 @@ import org.jetbrains.annotations.Nullable;
 public class PulverizerBlockEntity extends AbstractWorkBlockEntity{
     private DefaultedList<ItemStack> items = DefaultedList.ofSize(2, ItemStack.EMPTY);
 
-    public PulverizerBlockEntity(BlockPos pos, BlockState state) {
-        super(ModEntities.PULVERIZER_BLOCK_ENTITY, pos, state);
+    public PulverizerBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+        super(type, pos, state);
     }
+
+//    public PulverizerBlockEntity(BlockPos pos, BlockState state) {
+//        super(ModEntities.PULVERIZER_BLOCK_ENTITY, pos, state);
+//    }
 
     @Override
     public int[] getAvailableSlots(Direction side) {

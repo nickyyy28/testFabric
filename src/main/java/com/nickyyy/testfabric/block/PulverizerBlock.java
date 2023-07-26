@@ -24,13 +24,15 @@ public class PulverizerBlock extends AbstractWorkBlock{
     @Nullable
     @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new PulverizerBlockEntity(pos, state);
+//        return new PulverizerBlockEntity(pos, state);
+        return null;
     }
 
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
         if (world.isClient) return null;
-        return checkType(type, ModEntities.PULVERIZER_BLOCK_ENTITY, PulverizerBlockEntity::server_tick);
+//      return checkType(type, ModEntities.PULVERIZER_BLOCK_ENTITY, PulverizerBlockEntity::server_tick);
+        return null;
     }
 }

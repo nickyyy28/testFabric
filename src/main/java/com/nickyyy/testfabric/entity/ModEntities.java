@@ -19,4 +19,7 @@ public class ModEntities {
             FabricBlockEntityTypeBuilder.create(TransportCombinerBlockEntity::new, ModBlocks.TRANSPORT_COMBINER_BLOCK).build();
     public static final BlockEntityType<PipeFilterBlockEntity> PIPE_FILTER_ENTITY =
             FabricBlockEntityTypeBuilder.create(PipeFilterBlockEntity::new, ModBlocks.PIPE_FILTER_BLOCK).build();
+
+    public static final BlockEntityType<PulverizerBlockEntity> PULVERIZER_BLOCK_ENTITY =
+            FabricBlockEntityTypeBuilder.create(PulverizerBlockEntity::new, ModBlocks.PULVERIZER_BLOCK).build();
 }

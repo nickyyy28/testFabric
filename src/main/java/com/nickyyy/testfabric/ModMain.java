@@ -76,6 +76,7 @@ public class ModMain implements ModInitializer {
             context.add(ModItems.PHOSPHORUS_ORE);
             context.add(ModItems.SULFUR_ORE);
             context.add(ModItems.RARE_EARTH_ORE);
+            context.add(ModItems.ADIABATIC_BLOCK);
         });
 
 
@@ -109,6 +110,7 @@ public class ModMain implements ModInitializer {
         Registry.register(Registries.ITEM, new Identifier("testfabric", "phosphorus_ore"), ModItems.PHOSPHORUS_ORE);
         Registry.register(Registries.ITEM, new Identifier("testfabric", "sulfur_ore"), ModItems.SULFUR_ORE);
         Registry.register(Registries.ITEM, new Identifier("testfabric", "rare_earth_ore"), ModItems.RARE_EARTH_ORE);
+        Registry.register(Registries.ITEM, new Identifier("testfabric", "adiabatic_block"), ModItems.ADIABATIC_BLOCK);
     }
 
     public void registerBlocks() {
@@ -129,6 +131,7 @@ public class ModMain implements ModInitializer {
         Registry.register(Registries.BLOCK, new Identifier("testfabric", "phosphorus_ore"), ModBlocks.PHOSPHORUS_ORE);
         Registry.register(Registries.BLOCK, new Identifier("testfabric", "sulfur_ore"), ModBlocks.SULFUR_ORE);
         Registry.register(Registries.BLOCK, new Identifier("testfabric", "rare_earth_ore"), ModBlocks.RARE_EARTH_ORE);
+        Registry.register(Registries.BLOCK, new Identifier("testfabric", "adiabatic_block"), ModBlocks.ADIABATIC_BLOCK);
     }
 
     public void registerEntities() {

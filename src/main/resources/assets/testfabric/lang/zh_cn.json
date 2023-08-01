@@ -26,5 +26,6 @@
   "item.testfabric.steel_leggings": "钢护腿",
   "item.testfabric.strawberry": "草莓",
   "item.testfabric.strawberry.tooltip": "甜甜的草莓, 吃了会有好心情",
-  "item_group.testfabric.mod_item_tab": "未来工业: 自动化"
+  "item_group.testfabric.mod_item_tab": "未来工业: 自动化",
+  "block.testfabric.adiabatic_block": "绝热方块"
 }

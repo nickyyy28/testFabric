@@ -41,4 +41,5 @@ public class ModItems {
     public static final Item PHOSPHORUS_ORE = new BlockItem(ModBlocks.PHOSPHORUS_ORE, new FabricItemSettings().maxCount(64));
     public static final Item SULFUR_ORE = new BlockItem(ModBlocks.SULFUR_ORE, new FabricItemSettings().maxCount(64));
     public static final Item RARE_EARTH_ORE = new BlockItem(ModBlocks.RARE_EARTH_ORE, new FabricItemSettings().maxCount(64));
+    public static final Item ADIABATIC_BLOCK = new BlockItem(ModBlocks.ADIABATIC_BLOCK, new FabricItemSettings().maxCount(64));
 }

@@ -16,6 +16,7 @@
   "block.testfabric.transport_pipe": "Basic Transport Pipe",
   "block.testfabric.uranium_ore": "Uranium Ore",
   "block.testfabric.vertical_half_brick": "Vertical Half Brick",
+  "block.testfabric.adiabatic_block": "Adiabatic Block",
   "item.testfabric.horn": "Horn",
   "item.testfabric.horn.tooltip": "This is a horn, use it to say something",
   "item.testfabric.redstone_transform_engine": "RedStone Transform Engine",

@@ -20,6 +20,9 @@ public class ModEntities {
     public static final BlockEntityType<PipeFilterBlockEntity> PIPE_FILTER_ENTITY =
             FabricBlockEntityTypeBuilder.create(PipeFilterBlockEntity::new, ModBlocks.PIPE_FILTER_BLOCK).build();
 
+    public static final BlockEntityType<CopperCableEntity> COPPER_CABLE_ENTITY =
+            FabricBlockEntityTypeBuilder.create(CopperCableEntity::new, ModBlocks.COPPER_CABLE).build();
+
 //    public static final BlockEntityType<PulverizerBlockEntity> PULVERIZER_BLOCK_ENTITY =
 //            FabricBlockEntityTypeBuilder.create(PulverizerBlockEntity::new, ModBlocks.PULVERIZER_BLOCK).build();
 }

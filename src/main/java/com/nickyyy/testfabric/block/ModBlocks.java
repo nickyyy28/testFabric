@@ -43,5 +43,7 @@ public class ModBlocks {
     public static final Block RARE_EARTH_ORE = new ExperienceDroppingBlock(AbstractBlock.Settings.create().mapColor(MapColor.GRAY).instrument(Instrument.BASEDRUM).hardness(3.0f).requiresTool().strength(3.0f, 3.0f));
 
     public static final Block ADIABATIC_BLOCK = new Block(FabricBlockSettings.create().hardness(4.0f));
+
+    public static final Block COPPER_CABLE = new CopperCable(FabricBlockSettings.create().hardness(2.0f));
 //    public static final Block PULVERIZER_BLOCK = new PulverizerBlock(FabricBlockSettings.create().hardness(3.0f));
 }

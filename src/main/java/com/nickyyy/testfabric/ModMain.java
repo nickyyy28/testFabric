@@ -77,6 +77,7 @@ public class ModMain implements ModInitializer {
             context.add(ModItems.SULFUR_ORE);
             context.add(ModItems.RARE_EARTH_ORE);
             context.add(ModItems.ADIABATIC_BLOCK);
+            context.add(ModItems.COPPER_CABLE);
         });
 
 
@@ -111,6 +112,8 @@ public class ModMain implements ModInitializer {
         Registry.register(Registries.ITEM, new Identifier("testfabric", "sulfur_ore"), ModItems.SULFUR_ORE);
         Registry.register(Registries.ITEM, new Identifier("testfabric", "rare_earth_ore"), ModItems.RARE_EARTH_ORE);
         Registry.register(Registries.ITEM, new Identifier("testfabric", "adiabatic_block"), ModItems.ADIABATIC_BLOCK);
+
+        Registry.register(Registries.ITEM, new Identifier("testfabric", "copper_cable"), ModItems.COPPER_CABLE);
     }
 
     public void registerBlocks() {
@@ -132,6 +135,8 @@ public class ModMain implements ModInitializer {
         Registry.register(Registries.BLOCK, new Identifier("testfabric", "sulfur_ore"), ModBlocks.SULFUR_ORE);
         Registry.register(Registries.BLOCK, new Identifier("testfabric", "rare_earth_ore"), ModBlocks.RARE_EARTH_ORE);
         Registry.register(Registries.BLOCK, new Identifier("testfabric", "adiabatic_block"), ModBlocks.ADIABATIC_BLOCK);
+        Registry.register(Registries.BLOCK, new Identifier("testfabric", "cooper_cable"), ModBlocks.COPPER_CABLE);
+
     }
 
     public void registerEntities() {
@@ -145,5 +150,7 @@ public class ModMain implements ModInitializer {
                 ModEntities.TRANSPORT_COMBINER_BLOCK_ENTITY);
         Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier("testfabric", "pipe_filter"),
                 ModEntities.PIPE_FILTER_ENTITY);
+        Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier("testfabric", "copper_cable"),
+                ModEntities.COPPER_CABLE_ENTITY);
     }
 }

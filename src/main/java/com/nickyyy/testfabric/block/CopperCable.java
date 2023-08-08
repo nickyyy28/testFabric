@@ -1,9 +1,13 @@
 package com.nickyyy.testfabric.block;
 
 import com.nickyyy.testfabric.entity.CopperCableEntity;
+import com.nickyyy.testfabric.entity.ModEntities;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.BlockEntityTicker;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 public class CopperCable extends BaseCable{
@@ -15,5 +19,12 @@ public class CopperCable extends BaseCable{
     @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
         return new CopperCableEntity(pos, state);
+    }
+
+    @Nullable
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
+        if (world.isClient) return null;
+        return checkType(type, ModEntities.COPPER_CABLE_ENTITY, CopperCableEntity::server_tick);
     }
 }

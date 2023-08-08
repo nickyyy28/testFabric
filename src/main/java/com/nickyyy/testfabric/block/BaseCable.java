@@ -27,7 +27,7 @@ public abstract class BaseCable extends BlockWithEntity {
 
     public static final IntProperty CABLE_SHAPE = IntProperty.of("cable_shape", 0, 1);
 
-    public static final VoxelShape BASE_SHAPE = VoxelShapes.cuboid(0.4375f, 0.4375f, 0.4375, 0.5625, 0.5625, 0.5625);
+    public static final VoxelShape BASE_SHAPE = VoxelShapes.cuboid(0.4375f, 0.0f, 0.0f, 0.5625, 0.125f, 1.0f);
 
 
     protected BaseCable(Settings settings) {

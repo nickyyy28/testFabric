@@ -1,5 +1,5 @@
 {
 	"variants": {
-		"": { "model": "testfabric:block/adiabatic_block" }
+		"": { "model": "testfabric:block/copper_cable" }
 	}
 }

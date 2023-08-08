@@ -9,10 +9,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.lang.reflect.Method;
 
-//@Mixin(TitleScreen.class)
+@Mixin(TitleScreen.class)
 public class MixinTitle {
-//    @Inject(method = "init()V", at = @At("HEAD"))
+    @Inject(method = "init()V", at = @At("HEAD"))
     private void InjectMethod(CallbackInfo ci) {
-//        ModLog.LOGGER.info("this is the mixin log");
+        ModLog.LOGGER.info("this is the mixin log");
     }
 }

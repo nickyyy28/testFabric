@@ -1,0 +1,43 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "minecraft:block/cube_all",
+	"texture_size": [32, 32],
+	"textures": {
+		"0": "testfabric:block/copper_cable_sideup",
+		"particle": "testfabric:block/copper_cable_sideup"
+	},
+	"elements": [
+		{
+			"from": [7, 1, 0],
+			"to": [9, 17, 1],
+			"faces": {
+				"north": {"uv": [0, 0, 1, 8], "texture": "#0"},
+				"east": {"uv": [4, 0, 4.5, 8], "texture": "#0"},
+				"south": {"uv": [1, 0, 2, 8], "texture": "#0"},
+				"west": {"uv": [4.5, 0, 5, 8], "texture": "#0"},
+				"up": {"uv": [3, 5, 2, 4.5], "texture": "#0"},
+				"down": {"uv": [4, 4.5, 3, 5], "texture": "#0"}
+			}
+		},
+		{
+			"from": [7, 0, 0],
+			"to": [9, 1, 9],
+			"faces": {
+				"north": {"uv": [5, 1, 6, 1.5], "texture": "#0"},
+				"east": {"uv": [5, 0, 9.5, 0.5], "texture": "#0"},
+				"south": {"uv": [5, 1.5, 6, 2], "texture": "#0"},
+				"west": {"uv": [5, 0.5, 9.5, 1], "texture": "#0"},
+				"up": {"uv": [3, 4.5, 2, 0], "texture": "#0"},
+				"down": {"uv": [4, 0, 3, 4.5], "texture": "#0"}
+			}
+		}
+	],
+	"groups": [
+		{
+			"name": "group",
+			"origin": [8, 8, 8],
+			"color": 0,
+			"children": [0, 1]
+		}
+	]
+}

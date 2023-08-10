@@ -1,5 +1,85 @@
 {
-	"variants": {
-		"": { "model": "testfabric:block/copper_cable" }
-	}
+  "multipart": [
+    {
+      "apply": {
+        "model": "testfabric:block/copper_cable_dot"
+      },
+      "when": {
+        "east": "none",
+        "north": "none",
+        "south": "none",
+        "west": "none"
+      }
+    },
+    {
+      "apply": {
+        "model": "testfabric:block/copper_cable_side"
+      },
+      "when": {
+        "north": "side"
+      }
+    },
+    {
+      "apply": {
+        "model": "testfabric:block/copper_cable_side",
+        "y": 180
+      },
+      "when": {
+        "south": "side"
+      }
+    },
+    {
+      "apply": {
+        "model": "testfabric:block/copper_cable_side",
+        "y": 90
+      },
+      "when": {
+        "east": "side"
+      }
+    },
+    {
+      "apply": {
+        "model": "testfabric:block/copper_cable_side",
+        "y": 270
+      },
+      "when": {
+        "west": "side"
+      }
+    },
+    {
+      "apply": {
+        "model": "testfabric:block/copper_cable_sideup"
+      },
+      "when": {
+        "north": "up"
+      }
+    },
+    {
+      "apply": {
+        "model": "testfabric:block/copper_cable_sideup",
+        "y": 90
+      },
+      "when": {
+        "east": "up"
+      }
+    },
+    {
+      "apply": {
+        "model": "testfabric:block/copper_cable_sideup",
+        "y": 180
+      },
+      "when": {
+        "south": "up"
+      }
+    },
+    {
+      "apply": {
+        "model": "testfabric:block/copper_cable_sideup",
+        "y": 270
+      },
+      "when": {
+        "west": "up"
+      }
+    }
+  ]
 }

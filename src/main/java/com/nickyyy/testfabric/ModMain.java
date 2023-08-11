@@ -1,5 +1,6 @@
 package com.nickyyy.testfabric;
 
+import com.nickyyy.testfabric.block.BaseCable;
 import com.nickyyy.testfabric.block.ModBlocks;
 import com.nickyyy.testfabric.block.TransportPipeBlock;
 import com.nickyyy.testfabric.entity.ModEntities;
@@ -19,6 +20,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -82,6 +84,7 @@ public class ModMain implements ModInitializer {
 
 
         TransportPipeBlock.SIMILAR_BLOCK_SET.addAll(Stream.of(ModBlocks.TRANSPORT_PIPE_BLOCK, ModBlocks.TRANSPORT_COMBINER_BLOCK, ModBlocks.PIPE_FILTER_BLOCK).collect(Collectors.toCollection(ArrayList::new)));
+        BaseCable.LIKE_CABLE_BLOCKS.addAll(Stream.of(ModBlocks.COPPER_CABLE, ModBlocks.MINING_MACHINE_BLOCK).collect(Collectors.toCollection(HashSet::new)));
     }
 
     public void registerItems() {

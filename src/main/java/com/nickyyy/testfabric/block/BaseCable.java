@@ -1,7 +1,10 @@
 package com.nickyyy.testfabric.block;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
+import com.nickyyy.testfabric.util.ModLog;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.enums.WireConnection;
@@ -26,9 +29,12 @@ import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
+import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
 
 public abstract class BaseCable extends BlockWithEntity {
@@ -44,7 +50,7 @@ public abstract class BaseCable extends BlockWithEntity {
     public static final Map<Direction, EnumProperty<WireConnection>> DIRECTION_TO_WIRE_CONNECTION_PROPERTY = Maps.newEnumMap(ImmutableMap.of(Direction.NORTH, CABLE_CONNECTION_NORTH, Direction.EAST, CABLE_CONNECTION_EAST, Direction.SOUTH, CABLE_CONNECTION_SOUTH, Direction.WEST, CABLE_CONNECTION_WEST));
     public static final Map<Integer, EnumProperty<WireConnection>> INDEX_TO_WIRE_CONNECTION_PROPERTY = Maps.newHashMap(ImmutableMap.of(0, CABLE_CONNECTION_NORTH, 1, CABLE_CONNECTION_SOUTH, 2, CABLE_CONNECTION_WEST, 3, CABLE_CONNECTION_EAST));
     public static final Map<Integer, WireConnection> INDEX_TO_CONNECTION = Maps.newHashMap(ImmutableMap.of(0, WireConnection.NONE, 1, WireConnection.SIDE, 2, WireConnection.UP));
-    public static final VoxelShape BASE_SHAPE = VoxelShapes.cuboid(0.4375f, 0.0f, 0.0f, 0.5625, 0.125f, 1.0f);
+    public static final Set<Block> LIKE_CABLE_BLOCKS = new HashSet<>();
 
     public static final VoxelShape CABLE_DOT_SHAPE = VoxelShapes.cuboid(0.375f, 0.0f, 0.375f, 0.625f, 0.0625f, 0.625f);
     public static final VoxelShape CABLE_SIDE_NORTH_SHAPE = VoxelShapes.cuboid(0.4375f, 0, 0, 0.5625f, 0.0625f, 0.5625f);
@@ -76,12 +82,14 @@ public abstract class BaseCable extends BlockWithEntity {
         if (world.isClient) return ActionResult.SUCCESS;
 
 
-        int i = Random.create().nextInt(4);
+        /*int i = Random.create().nextInt(4);
         int j = Random.create().nextInt(3);
         player.sendMessage(Text.of("i = " + i + " j = " + j));
         state.with(INDEX_TO_WIRE_CONNECTION_PROPERTY.get(i), INDEX_TO_CONNECTION.get(j));
         setDefaultState(state);
-        world.updateNeighbor(state, pos, this, pos, false);
+        world.updateNeighbor(state, pos, this, pos, false);*/
+        ModLog.LOGGER.info("pos: " + pos);
+        displayState(state);
 
         return ActionResult.SUCCESS;
     }
@@ -134,25 +142,84 @@ public abstract class BaseCable extends BlockWithEntity {
     @Nullable
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
-        //TODO 改变方块状态
-        return super.getPlacementState(ctx);
+        BlockState state = getStateByAround(ctx.getWorld(), super.getPlacementState(ctx), ctx.getBlockPos());
+        displayState(state);
+        ModLog.LOGGER.info("================================");
+        return state;
     }
 
     @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
         super.onPlaced(world, pos, state, placer, itemStack);
         if (!world.isClient) {
-            //TODO 改变方块状态
-
+            state = getStateByAround(world, state, pos);
         }
     }
 
+    private void displayState(BlockState state) {
+        ModLog.LOGGER.info("CABLE_CONNECTION_NORTH: " + state.get(CABLE_CONNECTION_NORTH));
+        ModLog.LOGGER.info("CABLE_CONNECTION_SOUTH: " + state.get(CABLE_CONNECTION_SOUTH));
+        ModLog.LOGGER.info("CABLE_CONNECTION_WEST: " + state.get(CABLE_CONNECTION_WEST));
+        ModLog.LOGGER.info("CABLE_CONNECTION_EAST: " + state.get(CABLE_CONNECTION_EAST));
+    }
 
+    public BlockState getStateByAround(WorldView world, BlockState state, BlockPos pos) {
+        BlockState newState = state;
+        BlockState northState = world.getBlockState(pos.north());
+        Block northBlock = northState.getBlock();
+        BlockState southState = world.getBlockState(pos.south());
+        Block southBlock = southState.getBlock();
+        BlockState westState = world.getBlockState(pos.west());
+        Block westBlock = westState.getBlock();
+        BlockState eastState = world.getBlockState(pos.east());
+        Block eastBlock = eastState.getBlock();
+//        ModLog.LOGGER.info("North Block is " + northBlock);
+//        boolean match = LIKE_CABLE_BLOCKS.stream().anyMatch(block -> {
+//            ModLog.LOGGER.info("hashset block: " + block + " north block: " + northBlock);
+//            return block == northBlock;
+//        });
+//        ModLog.LOGGER.info("North Block " + (match ? "matched" : "not match"));
+        if (LIKE_CABLE_BLOCKS.contains(northBlock)) {
+            newState.with(CABLE_CONNECTION_NORTH, WireConnection.SIDE);
+//            ModLog.LOGGER.info("getStateByAround SIDE");
+        } else if (!northState.isAir() && northState.isSolidBlock(world, pos.north()) && LIKE_CABLE_BLOCKS.contains(world.getBlockState(pos.north().up()).getBlock())) {
+            newState.with(CABLE_CONNECTION_NORTH, WireConnection.UP);
+//            ModLog.LOGGER.info("getStateByAround UP");
+        } else {
+            newState.with(CABLE_CONNECTION_NORTH, WireConnection.NONE);
+//            ModLog.LOGGER.info("getStateByAround NONE");
+        }
+
+        if (LIKE_CABLE_BLOCKS.contains(southBlock)) {
+            newState.with(CABLE_CONNECTION_SOUTH, WireConnection.SIDE);
+        } else if (!southState.isAir() && southState.isSolidBlock(world, pos.south()) && LIKE_CABLE_BLOCKS.contains(world.getBlockState(pos.south().up()).getBlock())) {
+            newState.with(CABLE_CONNECTION_SOUTH, WireConnection.UP);
+        } else {
+            newState.with(CABLE_CONNECTION_SOUTH, WireConnection.NONE);
+        }
+
+        if (LIKE_CABLE_BLOCKS.contains(westBlock)) {
+            newState.with(CABLE_CONNECTION_WEST, WireConnection.SIDE);
+        } else if (!westState.isAir() && westState.isSolidBlock(world, pos.west()) && LIKE_CABLE_BLOCKS.contains(world.getBlockState(pos.west().up()).getBlock())) {
+            newState.with(CABLE_CONNECTION_WEST, WireConnection.UP);
+        } else {
+            newState.with(CABLE_CONNECTION_WEST, WireConnection.NONE);
+        }
+
+        if (LIKE_CABLE_BLOCKS.contains(eastBlock)) {
+            newState.with(CABLE_CONNECTION_EAST, WireConnection.SIDE);
+        } else if (!eastState.isAir() && eastState.isSolidBlock(world, pos.east()) && LIKE_CABLE_BLOCKS.contains(world.getBlockState(pos.east().up()).getBlock())) {
+            newState.with(CABLE_CONNECTION_EAST, WireConnection.UP);
+        } else {
+            newState.with(CABLE_CONNECTION_EAST, WireConnection.NONE);
+        }
+
+        return newState;
+    }
 
     @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
-        //TODO 相邻方块更新，改变自身状态
-        return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
+        return getStateByAround(world, state, pos);
     }
 
     @Override

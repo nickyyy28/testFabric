@@ -142,9 +142,10 @@ public abstract class BaseCable extends BlockWithEntity {
     @Nullable
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
-        BlockState state = getStateByAround(ctx.getWorld(), super.getPlacementState(ctx), ctx.getBlockPos());
-        displayState(state);
-        ModLog.LOGGER.info("================================");
+        BlockState state = getDefaultState();
+        state = getStateByAround(ctx.getWorld(), state, ctx.getBlockPos());
+//        displayState(state);
+//        ModLog.LOGGER.info("================================");
         return state;
     }
 
@@ -152,15 +153,17 @@ public abstract class BaseCable extends BlockWithEntity {
     public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
         super.onPlaced(world, pos, state, placer, itemStack);
         if (!world.isClient) {
-            state = getStateByAround(world, state, pos);
+//            state = getStateByAround(world, state, pos);
         }
     }
 
     private void displayState(BlockState state) {
+        ModLog.LOGGER.info("--------------------------------------------");
         ModLog.LOGGER.info("CABLE_CONNECTION_NORTH: " + state.get(CABLE_CONNECTION_NORTH));
         ModLog.LOGGER.info("CABLE_CONNECTION_SOUTH: " + state.get(CABLE_CONNECTION_SOUTH));
         ModLog.LOGGER.info("CABLE_CONNECTION_WEST: " + state.get(CABLE_CONNECTION_WEST));
         ModLog.LOGGER.info("CABLE_CONNECTION_EAST: " + state.get(CABLE_CONNECTION_EAST));
+        ModLog.LOGGER.info("--------------------------------------------");
     }
 
     public BlockState getStateByAround(WorldView world, BlockState state, BlockPos pos) {
@@ -179,40 +182,42 @@ public abstract class BaseCable extends BlockWithEntity {
 //            return block == northBlock;
 //        });
 //        ModLog.LOGGER.info("North Block " + (match ? "matched" : "not match"));
-        if (LIKE_CABLE_BLOCKS.contains(northBlock)) {
-            newState.with(CABLE_CONNECTION_NORTH, WireConnection.SIDE);
-//            ModLog.LOGGER.info("getStateByAround SIDE");
+        if (LIKE_CABLE_BLOCKS.contains(northBlock) || (northState.isAir() && LIKE_CABLE_BLOCKS.contains(world.getBlockState(pos.north().down()).getBlock()))) {
+            newState = newState.with(CABLE_CONNECTION_NORTH, WireConnection.SIDE);
         } else if (!northState.isAir() && northState.isSolidBlock(world, pos.north()) && LIKE_CABLE_BLOCKS.contains(world.getBlockState(pos.north().up()).getBlock())) {
-            newState.with(CABLE_CONNECTION_NORTH, WireConnection.UP);
-//            ModLog.LOGGER.info("getStateByAround UP");
+            newState = newState.with(CABLE_CONNECTION_NORTH, WireConnection.UP);
         } else {
-            newState.with(CABLE_CONNECTION_NORTH, WireConnection.NONE);
-//            ModLog.LOGGER.info("getStateByAround NONE");
+            newState = newState.with(CABLE_CONNECTION_NORTH, WireConnection.NONE);
         }
 
-        if (LIKE_CABLE_BLOCKS.contains(southBlock)) {
-            newState.with(CABLE_CONNECTION_SOUTH, WireConnection.SIDE);
+        WireConnection connection = newState.get(CABLE_CONNECTION_NORTH);
+        ModLog.LOGGER.info("north" + connection);
+
+        if (LIKE_CABLE_BLOCKS.contains(southBlock) || (southState.isAir() && LIKE_CABLE_BLOCKS.contains(world.getBlockState(pos.south().down()).getBlock()))) {
+            newState = newState.with(CABLE_CONNECTION_SOUTH, WireConnection.SIDE);
         } else if (!southState.isAir() && southState.isSolidBlock(world, pos.south()) && LIKE_CABLE_BLOCKS.contains(world.getBlockState(pos.south().up()).getBlock())) {
-            newState.with(CABLE_CONNECTION_SOUTH, WireConnection.UP);
+            newState = newState.with(CABLE_CONNECTION_SOUTH, WireConnection.UP);
         } else {
-            newState.with(CABLE_CONNECTION_SOUTH, WireConnection.NONE);
+            newState = newState.with(CABLE_CONNECTION_SOUTH, WireConnection.NONE);
         }
 
-        if (LIKE_CABLE_BLOCKS.contains(westBlock)) {
-            newState.with(CABLE_CONNECTION_WEST, WireConnection.SIDE);
+        if (LIKE_CABLE_BLOCKS.contains(westBlock) || (westState.isAir() && LIKE_CABLE_BLOCKS.contains(world.getBlockState(pos.west().down()).getBlock()))) {
+            newState = newState.with(CABLE_CONNECTION_WEST, WireConnection.SIDE);
         } else if (!westState.isAir() && westState.isSolidBlock(world, pos.west()) && LIKE_CABLE_BLOCKS.contains(world.getBlockState(pos.west().up()).getBlock())) {
-            newState.with(CABLE_CONNECTION_WEST, WireConnection.UP);
+            newState = newState.with(CABLE_CONNECTION_WEST, WireConnection.UP);
         } else {
-            newState.with(CABLE_CONNECTION_WEST, WireConnection.NONE);
+            newState = newState.with(CABLE_CONNECTION_WEST, WireConnection.NONE);
         }
 
-        if (LIKE_CABLE_BLOCKS.contains(eastBlock)) {
-            newState.with(CABLE_CONNECTION_EAST, WireConnection.SIDE);
+        if (LIKE_CABLE_BLOCKS.contains(eastBlock) || (eastState.isAir() && LIKE_CABLE_BLOCKS.contains(world.getBlockState(pos.east().down()).getBlock()))) {
+            newState = newState.with(CABLE_CONNECTION_EAST, WireConnection.SIDE);
         } else if (!eastState.isAir() && eastState.isSolidBlock(world, pos.east()) && LIKE_CABLE_BLOCKS.contains(world.getBlockState(pos.east().up()).getBlock())) {
-            newState.with(CABLE_CONNECTION_EAST, WireConnection.UP);
+            newState = newState.with(CABLE_CONNECTION_EAST, WireConnection.UP);
         } else {
-            newState.with(CABLE_CONNECTION_EAST, WireConnection.NONE);
+            newState = newState.with(CABLE_CONNECTION_EAST, WireConnection.NONE);
         }
+
+//        displayState(newState);
 
         return newState;
     }
@@ -220,6 +225,20 @@ public abstract class BaseCable extends BlockWithEntity {
     @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
         return getStateByAround(world, state, pos);
+//        return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
+    }
+
+    @Override
+    public void neighborUpdate(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify) {
+        if (world.isClient) {
+            return;
+        }
+        if (state.canPlaceAt(world, pos)) {
+//            this.update(world, pos, state);
+        } else {
+            BaseCable.dropStacks(state, world, pos);
+            world.removeBlock(pos, false);
+        }
     }
 
     @Override
@@ -229,9 +248,68 @@ public abstract class BaseCable extends BlockWithEntity {
 
     @Override
     public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean notify) {
-        if (state.isOf(state.getBlock())) return;
-        world.updateNeighbor(state, pos, Blocks.AIR, pos, false);
-        super.onBlockAdded(state, world, pos, oldState, notify);
+//        if (state.isOf(state.getBlock())) return;
+//        world.updateNeighbor(state, pos, this, pos, false);
+//        world.updateNeighbor(pos.north().up(), this);
+//        updateNeighbors(world, pos);
+//        super.onBlockAdded(state, world, pos, oldState, notify);
+        if (oldState.isOf(state.getBlock()) || world.isClient) {
+            return;
+        }
+        for (Direction direction : Direction.Type.VERTICAL) {
+            world.updateNeighborsAlways(pos.offset(direction), this);
+        }
+        this.updateOffsetNeighbors(world, pos);
+    }
+
+    @Override
+    public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
+        BlockPos blockPos = pos.down();
+        BlockState blockState = world.getBlockState(blockPos);
+        return this.canRunOnTop(world, blockPos, blockState);
+    }
+
+    private boolean canRunOnTop(BlockView world, BlockPos pos, BlockState floor) {
+        return floor.isSideSolidFullSquare(world, pos, Direction.UP) || floor.isOf(Blocks.HOPPER);
+    }
+
+    @Override
+    public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
+        if (moved || state.isOf(newState.getBlock())) {
+            return;
+        }
+        super.onStateReplaced(state, world, pos, newState, moved);
+        if (world.isClient) {
+            return;
+        }
+        for (Direction direction : Direction.values()) {
+            world.updateNeighborsAlways(pos.offset(direction), this);
+        }
+        this.updateOffsetNeighbors(world, pos);
+    }
+
+    private void updateNeighbors(World world, BlockPos pos) {
+        if (!world.getBlockState(pos).isOf(this)) {
+            return;
+        }
+        world.updateNeighborsAlways(pos, this);
+        for (Direction direction : Direction.values()) {
+            world.updateNeighborsAlways(pos.offset(direction), this);
+        }
+    }
+
+    private void updateOffsetNeighbors(World world, BlockPos pos) {
+        for (Direction direction : Direction.Type.HORIZONTAL) {
+            this.updateNeighbors(world, pos.offset(direction));
+        }
+        for (Direction direction : Direction.Type.HORIZONTAL) {
+            BlockPos blockPos = pos.offset(direction);
+            if (world.getBlockState(blockPos).isSolidBlock(world, blockPos)) {
+                this.updateNeighbors(world, blockPos.up());
+                continue;
+            }
+            this.updateNeighbors(world, blockPos.down());
+        }
     }
 
     @Override

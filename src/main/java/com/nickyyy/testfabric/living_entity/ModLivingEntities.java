@@ -8,7 +8,7 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
 
-class LivingEntity {
+public class ModLivingEntities {
     public static final EntityType<CubeEntity> CUB_ENTITY = Registry.register(Registries.ENTITY_TYPE, 
         new Identifier("testfabric", "cube"), FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, CubeEntity::new).dimensions(EntityDimensions.fixed(0.75f, 0.75f)).build());
 }

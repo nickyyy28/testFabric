@@ -6,13 +6,19 @@ import com.nickyyy.testfabric.block.TransportPipeBlock;
 import com.nickyyy.testfabric.entity.ModEntities;
 import com.nickyyy.testfabric.item.ModItemGroup;
 import com.nickyyy.testfabric.item.ModItems;
+import com.nickyyy.testfabric.living_entity.CubeEntity;
+import com.nickyyy.testfabric.living_entity.ModLivingEntities;
+import com.nickyyy.testfabric.living_entity_renderer.CubeEntityRenderer;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
+import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
+import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.fabricmc.fabric.api.registry.CompostingChanceRegistry;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.item.*;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
@@ -82,6 +88,7 @@ public class ModMain implements ModInitializer {
             context.add(ModItems.COPPER_CABLE);
         });
 
+        FabricDefaultAttributeRegistry.register(ModLivingEntities.CUB_ENTITY, CubeEntity.createLivingAttributes());
 
         TransportPipeBlock.SIMILAR_BLOCK_SET.addAll(Stream.of(ModBlocks.TRANSPORT_PIPE_BLOCK, ModBlocks.TRANSPORT_COMBINER_BLOCK, ModBlocks.PIPE_FILTER_BLOCK).collect(Collectors.toCollection(ArrayList::new)));
         BaseCable.LIKE_CABLE_BLOCKS.addAll(Stream.of(ModBlocks.COPPER_CABLE, ModBlocks.MINING_MACHINE_BLOCK).collect(Collectors.toCollection(HashSet::new)));

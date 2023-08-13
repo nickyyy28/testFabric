@@ -2,6 +2,8 @@ package com.nickyyy.testfabric.client;
 
 import com.nickyyy.testfabric.entity.ModEntities;
 import com.nickyyy.testfabric.entity.TransportPipeBlockEntity;
+import com.nickyyy.testfabric.living_entity.ModLivingEntities;
+import com.nickyyy.testfabric.living_entity_renderer.CubeEntityRenderer;
 import com.nickyyy.testfabric.render.DisplayBlockEntityRender;
 import com.nickyyy.testfabric.render.TransportPipeEntityRender;
 import com.nickyyy.testfabric.screen.ModScreenHandlers;
@@ -11,6 +13,7 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
 import net.minecraft.item.ItemStack;
@@ -29,6 +32,8 @@ public class TestFabricClient implements ClientModInitializer {
 
         ScreenRegistry.register(ModScreenHandlers.TRANSPORT_COMBINER_SCREEN_HANDLER, TransportCombinerScreen::new);
         ScreenRegistry.register(ModScreenHandlers.PIPE_FILTER_SCREEN_HANDLER, PipeFilterScreen::new);
+
+        EntityRendererRegistry.register(ModLivingEntities.CUB_ENTITY, CubeEntityRenderer::new);
 
         ClientPlayNetworking.registerGlobalReceiver(TransportPipeBlockEntity.TRANSPORT_ENTITY_PACKET_ID, ((client, handler, buf, responseSender) -> {
             ItemStack stack = buf.readItemStack();

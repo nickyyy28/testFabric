@@ -247,6 +247,7 @@ public abstract class BaseCable extends BlockWithEntity {
         return false;
     }
 
+
     @Override
     public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean notify) {
 //        if (state.isOf(state.getBlock())) return;

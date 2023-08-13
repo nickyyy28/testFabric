@@ -23,6 +23,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Vec3i;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
@@ -234,7 +235,7 @@ public abstract class BaseCable extends BlockWithEntity {
             return;
         }
         if (state.canPlaceAt(world, pos)) {
-//            this.update(world, pos, state);
+            // this.update(world, pos, state);
         } else {
             BaseCable.dropStacks(state, world, pos);
             world.removeBlock(pos, false);
@@ -256,10 +257,42 @@ public abstract class BaseCable extends BlockWithEntity {
         if (oldState.isOf(state.getBlock()) || world.isClient) {
             return;
         }
+        // this.update(world, pos, state);
         for (Direction direction : Direction.Type.VERTICAL) {
             world.updateNeighborsAlways(pos.offset(direction), this);
         }
         this.updateOffsetNeighbors(world, pos);
+    }
+
+    // @Override
+    // public void prepare(BlockState state, WorldAccess world, BlockPos pos, int flags, int maxUpdateDepth) {
+    //     BlockPos.Mutable mutable = new BlockPos.Mutable();
+    //     for (Direction direction : Direction.Type.HORIZONTAL) {
+    //         WireConnection wireConnection = (WireConnection)state.get(DIRECTION_TO_WIRE_CONNECTION_PROPERTY.get(direction));
+    //         if (wireConnection == WireConnection.NONE || world.getBlockState(mutable.set((Vec3i)pos, direction)).isOf(this)) continue;
+    //         mutable.move(Direction.DOWN);
+    //         BlockState blockState = world.getBlockState(mutable);
+    //         if (blockState.isOf(this)) {
+    //             Vec3i blockPos = mutable.offset(direction.getOpposite());
+    //             world.replaceWithStateForNeighborUpdate(direction.getOpposite(), world.getBlockState((BlockPos)blockPos), mutable, (BlockPos)blockPos, flags, maxUpdateDepth);
+    //         }
+    //         mutable.set((Vec3i)pos, direction).move(Direction.UP);
+    //         BlockState blockState2 = world.getBlockState(mutable);
+    //         if (!blockState2.isOf(this)) continue;
+    //         Vec3i blockPos2 = mutable.offset(direction.getOpposite());
+    //         world.replaceWithStateForNeighborUpdate(direction.getOpposite(), world.getBlockState((BlockPos)blockPos2), mutable, (BlockPos)blockPos2, flags, maxUpdateDepth);
+    //     }
+    // }
+
+    private void update(World world, BlockPos pos, BlockState state) {
+        HashSet<BlockPos> set = Sets.newHashSet();
+        set.add(pos);
+        for (Direction direction : Direction.values()) {
+            set.add(pos.offset(direction));
+        }
+        for (BlockPos blockPos : set) {
+            world.updateNeighborsAlways(blockPos, this);
+        }
     }
 
     @Override
@@ -282,6 +315,7 @@ public abstract class BaseCable extends BlockWithEntity {
         if (world.isClient) {
             return;
         }
+        // this.update(world, pos, state);
         for (Direction direction : Direction.values()) {
             world.updateNeighborsAlways(pos.offset(direction), this);
         }

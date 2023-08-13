@@ -1,6 +1,7 @@
 # User-specific stuff
 .idea/
-
+.vscode/
+bin/
 minecraft_source/
 src/main/generated/.cache/
 

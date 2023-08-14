@@ -5,6 +5,8 @@ bin/
 minecraft_source/
 src/main/generated/.cache/
 
+local.properties
+
 *.iml
 *.ipr
 *.iws

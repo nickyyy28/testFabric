@@ -13,6 +13,7 @@ import net.minecraft.entity.ai.pathing.NavigationType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.IntProperty;
@@ -89,8 +90,8 @@ public abstract class BaseCable extends BlockWithEntity {
         state.with(INDEX_TO_WIRE_CONNECTION_PROPERTY.get(i), INDEX_TO_CONNECTION.get(j));
         setDefaultState(state);
         world.updateNeighbor(state, pos, this, pos, false);*/
-        ModLog.LOGGER.info("pos: " + pos);
-        displayState(state);
+        ModLog.LOGGER.info("current pos: " + pos);
+//        displayState(state);
 
         return ActionResult.SUCCESS;
     }
@@ -177,12 +178,6 @@ public abstract class BaseCable extends BlockWithEntity {
         Block westBlock = westState.getBlock();
         BlockState eastState = world.getBlockState(pos.east());
         Block eastBlock = eastState.getBlock();
-//        ModLog.LOGGER.info("North Block is " + northBlock);
-//        boolean match = LIKE_CABLE_BLOCKS.stream().anyMatch(block -> {
-//            ModLog.LOGGER.info("hashset block: " + block + " north block: " + northBlock);
-//            return block == northBlock;
-//        });
-//        ModLog.LOGGER.info("North Block " + (match ? "matched" : "not match"));
         if (LIKE_CABLE_BLOCKS.contains(northBlock) || (northState.isAir() && LIKE_CABLE_BLOCKS.contains(world.getBlockState(pos.north().down()).getBlock()))) {
             newState = newState.with(CABLE_CONNECTION_NORTH, WireConnection.SIDE);
         } else if (!northState.isAir() && northState.isSolidBlock(world, pos.north()) && LIKE_CABLE_BLOCKS.contains(world.getBlockState(pos.north().up()).getBlock())) {
@@ -190,9 +185,6 @@ public abstract class BaseCable extends BlockWithEntity {
         } else {
             newState = newState.with(CABLE_CONNECTION_NORTH, WireConnection.NONE);
         }
-
-        WireConnection connection = newState.get(CABLE_CONNECTION_NORTH);
-        ModLog.LOGGER.info("north" + connection);
 
         if (LIKE_CABLE_BLOCKS.contains(southBlock) || (southState.isAir() && LIKE_CABLE_BLOCKS.contains(world.getBlockState(pos.south().down()).getBlock()))) {
             newState = newState.with(CABLE_CONNECTION_SOUTH, WireConnection.SIDE);
@@ -218,8 +210,6 @@ public abstract class BaseCable extends BlockWithEntity {
             newState = newState.with(CABLE_CONNECTION_EAST, WireConnection.NONE);
         }
 
-//        displayState(newState);
-
         return newState;
     }
 
@@ -235,7 +225,7 @@ public abstract class BaseCable extends BlockWithEntity {
             return;
         }
         if (state.canPlaceAt(world, pos)) {
-            // this.update(world, pos, state);
+//             this.update(world, pos, state);
         } else {
             BaseCable.dropStacks(state, world, pos);
             world.removeBlock(pos, false);
@@ -251,19 +241,26 @@ public abstract class BaseCable extends BlockWithEntity {
     @Override
     public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean notify) {
 //        if (state.isOf(state.getBlock())) return;
+        this.update(world, pos, state);
 //        world.updateNeighbor(state, pos, this, pos, false);
 //        world.updateNeighbor(pos.north().up(), this);
 //        updateNeighbors(world, pos);
 //        super.onBlockAdded(state, world, pos, oldState, notify);
-        if (oldState.isOf(state.getBlock()) || world.isClient) {
-            return;
-        }
+//        if (oldState.isOf(state.getBlock()) || world.isClient) {
+//            return;
+//        }
         // this.update(world, pos, state);
-        for (Direction direction : Direction.Type.VERTICAL) {
-            world.updateNeighborsAlways(pos.offset(direction), this);
-        }
-        this.updateOffsetNeighbors(world, pos);
+//        for (Direction direction : Direction.Type.VERTICAL) {
+//            world.updateNeighborsAlways(pos.offset(direction), this);
+//        }
+//        this.updateOffsetNeighbors(world, pos);
     }
+
+//    @Override
+//    public void onStacksDropped(BlockState state, ServerWorld world, BlockPos pos, ItemStack tool, boolean dropExperience) {
+//        super.onStacksDropped(state, world, pos, tool, dropExperience);
+//        this.update(world, pos, state);
+//    }
 
     // @Override
     // public void prepare(BlockState state, WorldAccess world, BlockPos pos, int flags, int maxUpdateDepth) {
@@ -288,11 +285,35 @@ public abstract class BaseCable extends BlockWithEntity {
     private void update(World world, BlockPos pos, BlockState state) {
         HashSet<BlockPos> set = Sets.newHashSet();
         set.add(pos);
-        for (Direction direction : Direction.values()) {
-            set.add(pos.offset(direction));
+//        for (Direction direction : Direction.values()) {
+//            set.add(pos.offset(direction));
+//        }
+//        for (BlockPos blockPos : set) {
+//            world.updateNeighborsAlways(blockPos, this);
+//        }
+        for (Direction direction : Direction.Type.HORIZONTAL) {
+            BlockState state1 = world.getBlockState(pos.offset(direction));
+            Block block1 = state1.getBlock();
+            if (LIKE_CABLE_BLOCKS.contains(block1) ) {
+                set.add(pos.offset(direction));
+            } else if (state1.isAir()) {
+                BlockState state2 = world.getBlockState(pos.offset(direction).down());
+                Block block2 = state2.getBlock();
+                if (LIKE_CABLE_BLOCKS.contains(block2)) {
+                    set.add(pos.offset(direction).down());
+                }
+            } else if (state1.isSolidBlock(world, pos.offset(direction))) {
+                BlockState state3 = world.getBlockState(pos.offset(direction).up());
+                Block block3 = state3.getBlock();
+                if (LIKE_CABLE_BLOCKS.contains(block3)) {
+                    set.add(pos.offset(direction).up());
+                }
+            }
         }
+
         for (BlockPos blockPos : set) {
-            world.updateNeighborsAlways(blockPos, this);
+            ModLog.LOGGER.info("update pos: " + blockPos);
+            world.updateNeighbor(blockPos, this, pos);
         }
     }
 
@@ -307,21 +328,21 @@ public abstract class BaseCable extends BlockWithEntity {
         return floor.isSideSolidFullSquare(world, pos, Direction.UP) || floor.isOf(Blocks.HOPPER);
     }
 
-    @Override
-    public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
-        if (moved || state.isOf(newState.getBlock())) {
-            return;
-        }
-        super.onStateReplaced(state, world, pos, newState, moved);
-        if (world.isClient) {
-            return;
-        }
-        // this.update(world, pos, state);
-        for (Direction direction : Direction.values()) {
-            world.updateNeighborsAlways(pos.offset(direction), this);
-        }
-        this.updateOffsetNeighbors(world, pos);
-    }
+//    @Override
+//    public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
+//        if (moved || state.isOf(newState.getBlock())) {
+//            return;
+//        }
+//        super.onStateReplaced(state, world, pos, newState, moved);
+//        if (world.isClient) {
+//            return;
+//        }
+//        // this.update(world, pos, state);
+//        for (Direction direction : Direction.values()) {
+//            world.updateNeighborsAlways(pos.offset(direction), this);
+//        }
+//        this.updateOffsetNeighbors(world, pos);
+//    }
 
     private void updateNeighbors(World world, BlockPos pos) {
         if (!world.getBlockState(pos).isOf(this)) {

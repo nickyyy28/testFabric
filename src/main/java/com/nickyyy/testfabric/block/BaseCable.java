@@ -156,6 +156,7 @@ public abstract class BaseCable extends BlockWithEntity {
         super.onPlaced(world, pos, state, placer, itemStack);
         if (!world.isClient) {
 //            state = getStateByAround(world, state, pos);
+            this.update(world, pos, state);
         }
     }
 
@@ -236,6 +237,7 @@ public abstract class BaseCable extends BlockWithEntity {
     public boolean canPathfindThrough(BlockState state, BlockView world, BlockPos pos, NavigationType type) {
         return false;
     }
+
 
 
     @Override
